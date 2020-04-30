@@ -3,9 +3,7 @@ namespace Sudoku
 {
     public class SudokuPuzzle
     {
-        private readonly int[,] fullGrid1;
-        int[,] fullGrid;
-        int[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private int[,] fullGrid;
 
         public SudokuPuzzle()
         {
@@ -23,6 +21,13 @@ namespace Sudoku
             puzzleGrid = new int[9, 9];
             ClearGrid(fullGrid);
             ClearGrid(puzzleGrid);
+        }
+
+        public void Print()
+        {
+            Console.WriteLine($"Number of solutions: {NumSolutions}");
+            PrintFullGrid();
+            PrintPuzzleGrid();
         }
 
         public void PrintFullGrid()
@@ -54,10 +59,8 @@ namespace Sudoku
 
         private void PrintGrid(int[,] cells)
         {
-            Console.WriteLine();
             for (int row = 0; row < 9; row++)
             {
-                Console.WriteLine();
                 if ((row) % 3 == 0)
                 {
                     Console.WriteLine("-------------------");
@@ -82,8 +85,8 @@ namespace Sudoku
                         Console.Write(" ");
                     }
                 }
+                Console.WriteLine();
             }
-            Console.WriteLine();
             Console.WriteLine("-------------------");
         }
     }

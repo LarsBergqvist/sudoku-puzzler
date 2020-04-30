@@ -10,8 +10,7 @@ namespace Sudoku
             var solver = new SudokuSolver(validator);
             var generator = new SudokuGenerator(validator, solver);
             var sudukoGrid = generator.GeneratePuzzle();
-            sudukoGrid.PrintFullGrid();
-            sudukoGrid.PrintPuzzleGrid();
+            sudukoGrid.Print();
       }
     }
 }
