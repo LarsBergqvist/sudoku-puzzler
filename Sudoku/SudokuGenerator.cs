@@ -6,7 +6,7 @@ namespace Sudoku
         public int MaxBlanks { get; }
     }
 
-    public class BasicPuzzlePolizy : IPuzzlePolicy
+    public class BasicPuzzlePolicy : IPuzzlePolicy
     {
         public int MaxBlanks => 30;
     }

@@ -13,7 +13,7 @@ namespace GridTests
         [Test]
         public void BasicPuzzleGridIsGeneratedCorrectly()
         {
-            var policy = new BasicPuzzlePolizy();
+            var policy = new BasicPuzzlePolicy();
 
             GridIsGeneratedCorrectly(policy);
         }
