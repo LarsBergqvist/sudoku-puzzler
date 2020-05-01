@@ -21,7 +21,7 @@ namespace GridTests
         [Test]
         public void HardPuzzleGridIsGeneratedCorrectly()
         {
-            var policy = new HardPuzzlePolizy();
+            var policy = new HardPuzzlePolicy();
 
             GridIsGeneratedCorrectly(policy);
         }
