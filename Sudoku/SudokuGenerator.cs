@@ -3,17 +3,17 @@ namespace Sudoku
 {
     public interface IPuzzlePolicy
     {
-        public int NumBlanks { get; }
+        public int MaxBlanks { get; }
     }
 
     public class BasicPuzzlePolizy : IPuzzlePolicy
     {
-        public int NumBlanks => 20;
+        public int MaxBlanks => 30;
     }
 
     public class HardPuzzlePolizy : IPuzzlePolicy
     {
-        public int NumBlanks => 50;
+        public int MaxBlanks => 50;
     }
 
     public class SudokuGenerator
@@ -34,18 +34,22 @@ namespace Sudoku
             var puzzle = new SudokuPuzzle();
             FillGrid(puzzle.FullGrid);
             puzzle.puzzleGrid = CopyGrid(puzzle.FullGrid);
-            CreatePuzzleGrid(puzzle, policy.NumBlanks);
+            CreatePuzzleGrid(puzzle, policy.MaxBlanks);
             return puzzle;
         }
 
-        private void CreatePuzzleGrid(SudokuPuzzle puzzle, int numBlanks)
+        private void CreatePuzzleGrid(SudokuPuzzle puzzle, int maxBlanks)
         {
-            var puzzleGrid = puzzle.puzzleGrid;
-
+            var puzzleGrid = CopyGrid(puzzle.puzzleGrid);
+            int numBlanks = maxBlanks;
             bool found = false;
-            while (!found)
+            //
+            // Start with number of blanks as specified in policy
+            // If multiple solutions are found, decrease the number of blank
+            // cells until a single solution is found
+            while (!found && numBlanks > 0)
             {
-                int numRetries = 10;
+                int numRetries = 2;
                 int retries = 0;
                 while (retries < numRetries && !found)
                 {
@@ -53,6 +57,7 @@ namespace Sudoku
                     var backupGrid = CopyGrid(puzzleGrid);
 
                     int numRemainingBlanks = numBlanks;
+
                     while (numRemainingBlanks > 0)
                     {
                         int row = rng.Next(9);
@@ -71,6 +76,13 @@ namespace Sudoku
                     puzzle.NumSolutions = 0;
                     _solver.SolveGrid(copy);
                     puzzle.NumSolutions = _solver.NumSolutions;
+                    if (puzzle.NumSolutions > 1)
+                    {
+                        Console.WriteLine($"Too many solutions: {puzzle.NumSolutions}");
+                    } else if (puzzle.NumSolutions == 0)
+                    {
+                        Console.WriteLine("No solution found");
+                    }
 
                     if (puzzle.NumSolutions != 1)
                     {
@@ -82,7 +94,9 @@ namespace Sudoku
                     }
                     retries++;
                 }
+                numBlanks--;
             }
+            puzzle.puzzleGrid = CopyGrid(puzzleGrid);
         }
 
         private bool FillGrid(int[,] grid)

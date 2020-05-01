@@ -12,6 +12,7 @@ namespace Sudoku
             var policy = new HardPuzzlePolizy();
             var sudukoPuzzle = generator.GeneratePuzzle(policy);
             sudukoPuzzle.Print();
+            Console.WriteLine($"Num blanks in puzzle: {validator.GetNumBlanks(sudukoPuzzle.puzzleGrid)}");
       }
     }
 }

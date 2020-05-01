@@ -17,7 +17,7 @@ namespace Sudoku
             _SolveGrid(grid);
         }
 
-        private void _SolveGrid(int[,] grid)
+        private bool _SolveGrid(int[,] grid)
         {
             for (int i = 0; i < grid.Length; i++)
             {
@@ -34,19 +34,23 @@ namespace Sudoku
                             {
                                 // detect one found solution
                                 NumSolutions++;
-                                return;
+//                                break;
                             }
                             else
                             {
-                                _SolveGrid(grid);
-                                return;
+                                if (_SolveGrid(grid))
+                                {
+                                    return true;
+                                }
                             }
                         }
                     }
                     // Could not find a valid value, back-propagate one step
+                    grid[row, col] = 0;
                     break;
                 }
             }
+            return false;
         }
     }
 }

@@ -42,7 +42,9 @@ namespace GridTests
                 Assert.IsTrue(validator.ValidGroups(fullGrid));
 
                 var puzzleGrid = puzzle.puzzleGrid;
-                Assert.AreEqual(validator.GetNumBlanks(puzzleGrid), policy.NumBlanks);
+                // Actual number of blanks can be less than specified in policy
+                // as we could not find a puzzle with on single solutions with NumBlanks
+                Assert.IsTrue(validator.GetNumBlanks(puzzleGrid) <= policy.MaxBlanks);
             }
         }
     }
