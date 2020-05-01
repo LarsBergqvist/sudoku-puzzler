@@ -18,7 +18,7 @@ namespace Sudoku
 
     public class SudokuGenerator
     {
-        int[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private readonly int[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         GridValidator _validator;
         SudokuSolver _solver;
@@ -73,9 +73,7 @@ namespace Sudoku
 
                     var copy = CopyGrid(puzzleGrid);
 
-                    puzzle.NumSolutions = 0;
-                    _solver.SolveGrid(copy);
-                    puzzle.NumSolutions = _solver.NumSolutions;
+                    puzzle.NumSolutions = _solver.SolveGrid(copy);
                     if (puzzle.NumSolutions > 1)
                     {
                         Console.WriteLine($"Too many solutions: {puzzle.NumSolutions}");

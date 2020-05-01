@@ -3,18 +3,19 @@ namespace Sudoku
 {
     public class SudokuSolver
     {
-        int[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        public int NumSolutions { get; set; }
+        private readonly int[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private int NumSolutions { get; set; }
         private GridValidator _validator;
         public SudokuSolver(GridValidator validator)
         {
             _validator = validator;
         }
 
-        public void SolveGrid(int[,] grid)
+        public int SolveGrid(int[,] grid)
         {
             NumSolutions = 0;
             _SolveGrid(grid);
+            return NumSolutions;
         }
 
         private bool _SolveGrid(int[,] grid)
@@ -34,7 +35,6 @@ namespace Sudoku
                             {
                                 // detect one found solution
                                 NumSolutions++;
-//                                break;
                             }
                             else
                             {

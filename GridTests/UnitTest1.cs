@@ -43,7 +43,7 @@ namespace GridTests
 
                 var puzzleGrid = puzzle.puzzleGrid;
                 // Actual number of blanks can be less than specified in policy
-                // as we could not find a puzzle with on single solutions with NumBlanks
+                // as we could not find a puzzle with on single solutions with MaxBlanks
                 Assert.IsTrue(validator.GetNumBlanks(puzzleGrid) <= policy.MaxBlanks);
             }
         }
