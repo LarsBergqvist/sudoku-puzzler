@@ -1,6 +1,21 @@
 ﻿using System;
 namespace Sudoku
 {
+    public interface IPuzzlePolicy
+    {
+        public int NumBlanks { get; }
+    }
+
+    public class BasicPuzzlePolizy : IPuzzlePolicy
+    {
+        public int NumBlanks => 20;
+    }
+
+    public class HardPuzzlePolizy : IPuzzlePolicy
+    {
+        public int NumBlanks => 50;
+    }
+
     public class SudokuGenerator
     {
         int[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -14,16 +29,16 @@ namespace Sudoku
             _solver = solver;
         }
 
-        public SudokuPuzzle GeneratePuzzle()
+        public SudokuPuzzle GeneratePuzzle(IPuzzlePolicy policy)
         {
             var puzzle = new SudokuPuzzle();
             FillGrid(puzzle.FullGrid);
             puzzle.puzzleGrid = CopyGrid(puzzle.FullGrid);
-            CreatePuzzle(puzzle);
+            CreatePuzzleGrid(puzzle, policy.NumBlanks);
             return puzzle;
         }
 
-        private void CreatePuzzle(SudokuPuzzle puzzle)
+        private void CreatePuzzleGrid(SudokuPuzzle puzzle, int numBlanks)
         {
             var puzzleGrid = puzzle.puzzleGrid;
 
@@ -37,8 +52,8 @@ namespace Sudoku
                     var rng = new Random(Guid.NewGuid().GetHashCode());
                     var backupGrid = CopyGrid(puzzleGrid);
 
-                    int numBlanks = 50;
-                    while (numBlanks > 0)
+                    int numRemainingBlanks = numBlanks;
+                    while (numRemainingBlanks > 0)
                     {
                         int row = rng.Next(9);
                         int col = rng.Next(9);
@@ -48,7 +63,7 @@ namespace Sudoku
                             col = rng.Next(9);
                         }
                         puzzleGrid[row, col] = 0;
-                        numBlanks--;
+                        numRemainingBlanks--;
                     }
 
                     var copy = CopyGrid(puzzleGrid);
@@ -72,7 +87,7 @@ namespace Sudoku
 
         private bool FillGrid(int[,] grid)
         {
-            for (int i = 0; i < 81; i++)
+            for (int i = 0; i < grid.Length; i++)
             {
                 int row = (int)Math.Floor(i / 9.0);
                 int col = i % 9;
@@ -122,10 +137,10 @@ namespace Sudoku
 
         private int[,] CopyGrid(int[,] original)
         {
-            int[,] copy = new int[9, 9];
-            for (int row = 0; row < 9; row++)
+            int[,] copy = new int[original.GetLength(0), original.GetLength(1)];
+            for (int row = 0; row < original.GetLength(0); row++)
             {
-                for (int col = 0; col < 9; col++)
+                for (int col = 0; col < original.GetLength(1); col++)
                 {
                     copy[row, col] = original[row, col];
                 }

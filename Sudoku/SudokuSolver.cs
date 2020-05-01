@@ -11,15 +11,15 @@ namespace Sudoku
             _validator = validator;
         }
 
-        public bool SolveGrid(int[,] grid)
+        public void SolveGrid(int[,] grid)
         {
             NumSolutions = 0;
-            return _SolveGrid(grid);
+            _SolveGrid(grid);
         }
 
-        private bool _SolveGrid(int[,] grid)
+        private void _SolveGrid(int[,] grid)
         {
-            for (int i = 0; i < 81; i++)
+            for (int i = 0; i < grid.Length; i++)
             {
                 int row = (int)Math.Floor(i / 9.0);
                 int col = i % 9;
@@ -34,22 +34,19 @@ namespace Sudoku
                             {
                                 // detect one found solution
                                 NumSolutions++;
-                                break;
+                                return;
                             }
                             else
                             {
-                                if (_SolveGrid(grid))
-                                {
-                                    return true;
-                                }
+                                _SolveGrid(grid);
+                                return;
                             }
                         }
                     }
-                    grid[row, col] = 0;
+                    // Could not find a valid value, back-propagate one step
                     break;
                 }
             }
-            return true;
         }
     }
 }

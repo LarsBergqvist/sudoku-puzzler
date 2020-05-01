@@ -9,11 +9,26 @@ namespace Sudoku
         {
         }
 
+        public int GetNumBlanks(int[,] grid)
+        {
+            int numBlanks = 0;
+            for (int row = 0; row < grid.GetLength(0); row++)
+            {
+                for (int col = 0; col < grid.GetLength(1); col++)
+                {
+                    if (grid[row, col] == 0)
+                        numBlanks++;
+                }
+            }
+
+            return numBlanks;
+        }
+
         public bool GridIsComplete(int[,] grid)
         {
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < grid.GetLength(0); row++)
             {
-                for (int col = 0; col < 9; col++)
+                for (int col = 0; col < grid.GetLength(1); col++)
                 {
                     if (grid[row, col] == 0)
                         return false;
@@ -25,9 +40,9 @@ namespace Sudoku
 
         public bool ValidRows(int[,] grid)
         {
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < grid.GetLength(0); row++)
             {
-                for (int col = 0; col < 9; col++)
+                for (int col = 0; col < grid.GetLength(1); col++)
                 {
                     var val = grid[row, col];
                     if (NumEqualValuesInRow(val, row, grid) != 1)
@@ -42,9 +57,9 @@ namespace Sudoku
 
         public bool ValidColumns(int[,] grid)
         {
-            for (int col = 0; col < 9; col++)
+            for (int col = 0; col < grid.GetLength(1); col++)
             {
-                for (int row = 0; row < 9; row++)
+                for (int row = 0; row < grid.GetLength(0); row++)
                 {
                     var val = grid[row, col];
                     if (NumEqualValuesInColumn(val, col, grid) != 1)
@@ -60,7 +75,7 @@ namespace Sudoku
         private int NumEqualValuesInColumn(int val, int col, int[,] grid)
         {
             int numEqual = 0;
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < grid.GetLength(0); row++)
             {
                 if (grid[row, col] == val)
                 {
@@ -73,7 +88,7 @@ namespace Sudoku
         private int NumEqualValuesInRow(int val, int row, int[,] grid)
         {
             int numEqual = 0;
-            for (int col = 0; col < 9; col++)
+            for (int col = 0; col < grid.GetLength(1); col++)
             {
                 if (grid[row, col] == val)
                 {
@@ -123,7 +138,7 @@ namespace Sudoku
 
         public bool ValueInRow(int val, int row, int[,] grid)
         {
-            for (int col = 0; col < 9; col++)
+            for (int col = 0; col < grid.GetLength(1); col++)
             {
                 if (grid[row, col] == val)
                 {
@@ -135,7 +150,7 @@ namespace Sudoku
 
         public bool ValueInCol(int val, int col, int[,] grid)
         {
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < grid.GetLength(0); row++)
             {
                 if (grid[row, col] == val)
                 {

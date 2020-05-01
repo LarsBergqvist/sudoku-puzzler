@@ -9,8 +9,9 @@ namespace Sudoku
             var validator = new GridValidator();
             var solver = new SudokuSolver(validator);
             var generator = new SudokuGenerator(validator, solver);
-            var sudukoGrid = generator.GeneratePuzzle();
-            sudukoGrid.Print();
+            var policy = new HardPuzzlePolizy();
+            var sudukoPuzzle = generator.GeneratePuzzle(policy);
+            sudukoPuzzle.Print();
       }
     }
 }

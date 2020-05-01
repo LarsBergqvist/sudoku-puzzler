@@ -3,23 +3,21 @@ namespace Sudoku
 {
     public class SudokuPuzzle
     {
-        private int[,] fullGrid;
-
         public SudokuPuzzle()
         {
             Clear();
         }
 
-        public int[,] FullGrid => fullGrid;
+        public int[,] FullGrid { get; private set; }
         public int[,] puzzleGrid { get; set; }
         public int NumSolutions { get; set; }
 
         public void Clear()
         {
             NumSolutions = 0;
-            fullGrid = new int[9, 9];
+            FullGrid = new int[9, 9];
             puzzleGrid = new int[9, 9];
-            ClearGrid(fullGrid);
+            ClearGrid(FullGrid);
             ClearGrid(puzzleGrid);
         }
 
@@ -35,7 +33,7 @@ namespace Sudoku
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Full grid:");
-            PrintGrid(fullGrid);
+            PrintGrid(FullGrid);
         }
 
         public void PrintPuzzleGrid()
@@ -48,9 +46,9 @@ namespace Sudoku
 
         private void ClearGrid(int[,] cells)
         {
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < cells.GetLength(0); row++)
             {
-                for (int col = 0; col < 9; col++)
+                for (int col = 0; col < cells.GetLength(1); col++)
                 {
                     cells[row, col] = 0;
                 }
@@ -59,14 +57,14 @@ namespace Sudoku
 
         private void PrintGrid(int[,] cells)
         {
-            for (int row = 0; row < 9; row++)
+            for (int row = 0; row < cells.GetLength(0); row++)
             {
                 if ((row) % 3 == 0)
                 {
                     Console.WriteLine("-------------------");
                 }
                 Console.Write("|");
-                for (int col = 0; col < 9; col++)
+                for (int col = 0; col < cells.GetLength(1); col++)
                 {
                     if (cells[row, col] == 0)
                     {
