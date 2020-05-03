@@ -35,6 +35,10 @@ namespace Sudoku
                             {
                                 // detect one found solution
                                 NumSolutions++;
+                                if (NumSolutions > 1)
+                                {
+                                    return true;
+                                }
                             }
                             else
                             {

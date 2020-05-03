@@ -13,7 +13,7 @@ namespace Sudoku
 
     public class HardPuzzlePolicy : IPuzzlePolicy
     {
-        public int MaxBlanks => 50;
+        public int MaxBlanks => 55;
     }
 
     public class SudokuGenerator
@@ -49,7 +49,7 @@ namespace Sudoku
             // cells until a single solution is found
             while (!found && numBlanks > 0)
             {
-                int numRetries = 2;
+                int numRetries = 10;
                 int retries = 0;
                 while (retries < numRetries && !found)
                 {
@@ -77,7 +77,8 @@ namespace Sudoku
                     if (puzzle.NumSolutions > 1)
                     {
                         Console.WriteLine($"Too many solutions: {puzzle.NumSolutions}");
-                    } else if (puzzle.NumSolutions == 0)
+                    }
+                    else if (puzzle.NumSolutions == 0)
                     {
                         Console.WriteLine("No solution found");
                     }
