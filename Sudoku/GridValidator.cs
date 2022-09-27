@@ -5,9 +5,7 @@ namespace Sudoku
 {
     public class GridValidator
     {
-        public GridValidator()
-        {
-        }
+        private readonly HashSet<int> _numbers = new HashSet<int>();
 
         public int GetNumBlanks(int[,] grid)
         {
@@ -104,20 +102,20 @@ namespace Sudoku
             {
                 for(int colGroup=0; colGroup < 3; colGroup++)
                 {
-                    HashSet<int> numbers = new HashSet<int>();
+                    _numbers.Clear();
                     for (int row=rowGroup*3; row < rowGroup*3+3; row++)
                     {
                         for(int col=colGroup*3; col < colGroup*3+3; col++)
                         {
                             var val = grid[row, col];
-                            if (numbers.Contains(val))
+                            if (_numbers.Contains(val))
                             {
                                 return false;
                             }
-                            numbers.Add(val);
+                            _numbers.Add(val);
                         }
                     }
-                    if (numbers.Count != 9)
+                    if (_numbers.Count != 9)
                     {
                         return false;
                     }

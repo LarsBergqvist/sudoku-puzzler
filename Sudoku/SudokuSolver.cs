@@ -1,60 +1,59 @@
 ﻿using System;
-namespace Sudoku
+namespace Sudoku;
+
+public class SudokuSolver
 {
-    public class SudokuSolver
+    private readonly int[] _numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    private int NumSolutions { get; set; }
+    private readonly GridValidator _validator;
+    public SudokuSolver(GridValidator validator)
     {
-        private readonly int[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        private int NumSolutions { get; set; }
-        private GridValidator _validator;
-        public SudokuSolver(GridValidator validator)
-        {
-            _validator = validator;
-        }
+        _validator = validator;
+    }
 
-        public int SolveGrid(int[,] grid)
-        {
-            NumSolutions = 0;
-            _SolveGrid(grid);
-            return NumSolutions;
-        }
+    public int SolveGrid(int[,] grid)
+    {
+        NumSolutions = 0;
+        _SolveGrid(grid);
+        return NumSolutions;
+    }
 
-        private bool _SolveGrid(int[,] grid)
+    private bool _SolveGrid(int[,] grid)
+    {
+        for (int i = 0; i < grid.Length; i++)
         {
-            for (int i = 0; i < grid.Length; i++)
+            int row = (int)Math.Floor(i / 9.0);
+            int col = i % 9;
+            if (grid[row, col] == 0)
             {
-                int row = (int)Math.Floor(i / 9.0);
-                int col = i % 9;
-                if (grid[row, col] == 0)
+                foreach (var val in _numberList)
                 {
-                    foreach (var val in numberList)
+                    if (_validator.ValidPositionForValue(val, row, col, grid))
                     {
-                        if (_validator.ValidPositionForValue(val, row, col, grid))
+                        grid[row, col] = val;
+                        if (_validator.GridIsComplete(grid))
                         {
-                            grid[row, col] = val;
-                            if (_validator.GridIsComplete(grid))
+                            // detect one found solution
+                            NumSolutions++;
+                            if (NumSolutions > 1)
                             {
-                                // detect one found solution
-                                NumSolutions++;
-                                if (NumSolutions > 1)
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (_SolveGrid(grid))
                             {
-                                if (_SolveGrid(grid))
-                                {
-                                    return true;
-                                }
+                                return true;
                             }
                         }
                     }
-                    // Could not find a valid value, back-propagate one step
-                    grid[row, col] = 0;
-                    break;
                 }
+                // Could not find a valid value, back-propagate one step
+                grid[row, col] = 0;
+                break;
             }
-            return false;
         }
+        return false;
     }
 }
