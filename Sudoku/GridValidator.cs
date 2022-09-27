@@ -7,7 +7,7 @@ namespace Sudoku
     {
         private readonly HashSet<int> _numbers = new HashSet<int>();
 
-        public int GetNumBlanks(int[,] grid)
+        public int GetNumBlanks(byte[,] grid)
         {
             int numBlanks = 0;
             for (int row = 0; row < grid.GetLength(0); row++)
@@ -22,7 +22,7 @@ namespace Sudoku
             return numBlanks;
         }
 
-        public bool GridIsComplete(int[,] grid)
+        public bool GridIsComplete(byte[,] grid)
         {
             for (int row = 0; row < grid.GetLength(0); row++)
             {
@@ -36,7 +36,7 @@ namespace Sudoku
             return true;
         }
 
-        public bool ValidRows(int[,] grid)
+        public bool ValidRows(byte[,] grid)
         {
             for (int row = 0; row < grid.GetLength(0); row++)
             {
@@ -53,7 +53,7 @@ namespace Sudoku
             return true;
         }
 
-        public bool ValidColumns(int[,] grid)
+        public bool ValidColumns(byte[,] grid)
         {
             for (int col = 0; col < grid.GetLength(1); col++)
             {
@@ -70,7 +70,7 @@ namespace Sudoku
             return true;
         }
 
-        private int NumEqualValuesInColumn(int val, int col, int[,] grid)
+        private int NumEqualValuesInColumn(int val, int col, byte[,] grid)
         {
             int numEqual = 0;
             for (int row = 0; row < grid.GetLength(0); row++)
@@ -83,7 +83,7 @@ namespace Sudoku
             return numEqual;
         }
 
-        private int NumEqualValuesInRow(int val, int row, int[,] grid)
+        private int NumEqualValuesInRow(int val, int row, byte[,] grid)
         {
             int numEqual = 0;
             for (int col = 0; col < grid.GetLength(1); col++)
@@ -96,7 +96,7 @@ namespace Sudoku
             return numEqual;
         }
 
-        public bool ValidGroups(int[,] grid)
+        public bool ValidGroups(byte[,] grid)
         {
             for(int rowGroup=0; rowGroup < 3; rowGroup++)
             {
@@ -124,7 +124,7 @@ namespace Sudoku
             return true;
         }
 
-        public bool ValidPositionForValue(int val, int row, int col, int[,] grid)
+        public bool ValidPositionForValue(int val, int row, int col, byte[,] grid)
         {
             if (ValueInRow(val, row, grid) || ValueInCol(val, col, grid) || ValueInGroup(val, row, col, grid))
             {
@@ -134,7 +134,7 @@ namespace Sudoku
             return true;
         }
 
-        public bool ValueInRow(int val, int row, int[,] grid)
+        public bool ValueInRow(int val, int row, byte[,] grid)
         {
             for (int col = 0; col < grid.GetLength(1); col++)
             {
@@ -146,7 +146,7 @@ namespace Sudoku
             return false;
         }
 
-        public bool ValueInCol(int val, int col, int[,] grid)
+        public bool ValueInCol(int val, int col, byte[,] grid)
         {
             for (int row = 0; row < grid.GetLength(0); row++)
             {
@@ -158,7 +158,7 @@ namespace Sudoku
             return false;
         }
 
-        public bool ValueInGroup(int val, int row, int col, int[,] grid)
+        public bool ValueInGroup(int val, int row, int col, byte[,] grid)
         {
             // Check if value exists in its 3x3 group
             var groupRowStart = (int)(Math.Floor(row / 3.0) * 3);

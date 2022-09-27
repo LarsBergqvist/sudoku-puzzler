@@ -18,7 +18,7 @@ public class HardPuzzlePolicy : IPuzzlePolicy
 
 public class SudokuGenerator
 {
-    private readonly int[] _numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    private readonly byte[] _numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
     private readonly GridValidator _validator;
     private readonly SudokuSolver _solver;
@@ -100,7 +100,7 @@ public class SudokuGenerator
         puzzle.PuzzleGrid = CopyGrid(puzzleGrid);
     }
 
-    private bool FillGrid(int[,] grid)
+    private bool FillGrid(byte[,] grid)
     {
         for (int i = 0; i < grid.Length; i++)
         {
@@ -136,7 +136,7 @@ public class SudokuGenerator
         return false;
     }
 
-    private int[] GetRandomNumberList()
+    private byte[] GetRandomNumberList()
     {
         var rng = new Random(Guid.NewGuid().GetHashCode());
         int n = _numberList.Length;
@@ -148,9 +148,9 @@ public class SudokuGenerator
         return _numberList;
     }
 
-    private int[,] CopyGrid(int[,] original)
+    private byte[,] CopyGrid(byte[,] original)
     {
-        var copy = new int[original.GetLength(0), original.GetLength(1)];
+        var copy = new byte[original.GetLength(0), original.GetLength(1)];
         for (var row = 0; row < original.GetLength(0); row++)
         {
             for (var col = 0; col < original.GetLength(1); col++)

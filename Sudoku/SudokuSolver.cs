@@ -3,7 +3,7 @@ namespace Sudoku;
 
 public class SudokuSolver
 {
-    private readonly int[] _numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    private readonly byte[] _numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     private int NumSolutions { get; set; }
     private readonly GridValidator _validator;
     public SudokuSolver(GridValidator validator)
@@ -11,14 +11,14 @@ public class SudokuSolver
         _validator = validator;
     }
 
-    public int SolveGrid(int[,] grid)
+    public int SolveGrid(byte[,] grid)
     {
         NumSolutions = 0;
         _SolveGrid(grid);
         return NumSolutions;
     }
 
-    private bool _SolveGrid(int[,] grid)
+    private bool _SolveGrid(byte[,] grid)
     {
         for (int i = 0; i < grid.Length; i++)
         {

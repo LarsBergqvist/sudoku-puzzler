@@ -8,8 +8,8 @@ public class SudokuPuzzle
         Clear();
     }
 
-    public int[,] FullGrid { get; private set; } = new int[9, 9];
-    public int[,] PuzzleGrid { get; set; } = new int [9, 9];
+    public byte[,] FullGrid { get; private set; } = new byte[9, 9];
+    public byte[,] PuzzleGrid { get; set; } = new byte [9, 9];
     public int NumSolutions { get; set; }
 
     private void Clear()
@@ -42,7 +42,7 @@ public class SudokuPuzzle
         PrintGrid(PuzzleGrid);
     }
 
-    private void ClearGrid(int[,] cells)
+    private void ClearGrid(byte[,] cells)
     {
         for (var row = 0; row < cells.GetLength(0); row++)
         {
@@ -53,7 +53,7 @@ public class SudokuPuzzle
         }
     }
 
-    private void PrintGrid(int[,] cells)
+    private void PrintGrid(byte[,] cells)
     {
         for (int row = 0; row < cells.GetLength(0); row++)
         {
