@@ -3,16 +3,17 @@ namespace Sudoku;
 
 public class SudokuPuzzle
 {
+    private const int Size = 9;
     public SudokuPuzzle()
     {
         Clear();
     }
 
-    public byte[,] FullGrid { get; private set; } = new byte[9, 9];
-    public byte[,] PuzzleGrid { get; set; } = new byte [9, 9];
+    public byte[,] FullGrid { get; private set; } = new byte[Size, Size];
+    public byte[,] PuzzleGrid { get; set; } = new byte [Size, Size];
     public int NumSolutions { get; set; }
 
-    private void Clear()
+    public void Clear()
     {
         NumSolutions = 0;
         ClearGrid(FullGrid);
@@ -44,9 +45,9 @@ public class SudokuPuzzle
 
     private void ClearGrid(byte[,] cells)
     {
-        for (var row = 0; row < cells.GetLength(0); row++)
+        for (var row = 0; row < Size; row++)
         {
-            for (int col = 0; col < cells.GetLength(1); col++)
+            for (var col = 0; col < Size; col++)
             {
                 cells[row, col] = 0;
             }
@@ -55,14 +56,14 @@ public class SudokuPuzzle
 
     private void PrintGrid(byte[,] cells)
     {
-        for (int row = 0; row < cells.GetLength(0); row++)
+        for (int row = 0; row < Size; row++)
         {
             if ((row) % 3 == 0)
             {
                 Console.WriteLine("-------------------");
             }
             Console.Write("|");
-            for (int col = 0; col < cells.GetLength(1); col++)
+            for (int col = 0; col < Size; col++)
             {
                 if (cells[row, col] == 0)
                 {

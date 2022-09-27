@@ -22,6 +22,7 @@ public class SudokuGenerator
 
     private readonly GridValidator _validator;
     private readonly SudokuSolver _solver;
+    private readonly SudokuPuzzle _sudokuPuzzle = new SudokuPuzzle();
 
     public SudokuGenerator(GridValidator validator, SudokuSolver solver)
     {
@@ -31,11 +32,11 @@ public class SudokuGenerator
 
     public SudokuPuzzle GeneratePuzzle(IPuzzlePolicy policy)
     {
-        var puzzle = new SudokuPuzzle();
-        FillGrid(puzzle.FullGrid);
-        puzzle.PuzzleGrid = CopyGrid(puzzle.FullGrid);
-        CreatePuzzleGrid(puzzle, policy.MaxBlanks);
-        return puzzle;
+        _sudokuPuzzle.Clear();
+        FillGrid(_sudokuPuzzle.FullGrid);
+        _sudokuPuzzle.PuzzleGrid = CopyGrid(_sudokuPuzzle.FullGrid);
+        CreatePuzzleGrid(_sudokuPuzzle, policy.MaxBlanks);
+        return _sudokuPuzzle;
     }
 
     private void CreatePuzzleGrid(SudokuPuzzle puzzle, int maxBlanks)
