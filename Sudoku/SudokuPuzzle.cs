@@ -20,29 +20,6 @@ public class SudokuPuzzle
         ClearGrid(PuzzleGrid);
     }
 
-    public void Print()
-    {
-        Console.WriteLine($"Number of solutions: {NumSolutions}");
-        PrintFullGrid();
-        PrintPuzzleGrid();
-    }
-
-    private void PrintFullGrid()
-    {
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine("Full grid:");
-        PrintGrid(FullGrid);
-    }
-
-    private void PrintPuzzleGrid()
-    {
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine("Puzzle grid:");
-        PrintGrid(PuzzleGrid);
-    }
-
     private void ClearGrid(byte[,] cells)
     {
         for (var row = 0; row < Size; row++)
@@ -52,38 +29,5 @@ public class SudokuPuzzle
                 cells[row, col] = 0;
             }
         }
-    }
-
-    private void PrintGrid(byte[,] cells)
-    {
-        for (int row = 0; row < Size; row++)
-        {
-            if ((row) % 3 == 0)
-            {
-                Console.WriteLine("-------------------");
-            }
-            Console.Write("|");
-            for (int col = 0; col < Size; col++)
-            {
-                if (cells[row, col] == 0)
-                {
-                    Console.Write(" ");
-                }
-                else
-                {
-                    Console.Write($"{cells[row, col]}");
-                }
-                if ((col + 1) % 3 == 0)
-                {
-                    Console.Write("|");
-                }
-                else
-                {
-                    Console.Write(" ");
-                }
-            }
-            Console.WriteLine();
-        }
-        Console.WriteLine("-------------------");
     }
 }
