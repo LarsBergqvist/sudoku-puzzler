@@ -1,5 +1,4 @@
-﻿using System;
-namespace Sudoku;
+﻿namespace Sudoku;
 
 public class SudokuPuzzle
 {
@@ -16,17 +15,12 @@ public class SudokuPuzzle
     public void Clear()
     {
         NumSolutions = 0;
-        ClearGrid(FullGrid);
-        ClearGrid(PuzzleGrid);
-    }
-
-    private void ClearGrid(byte[,] cells)
-    {
         for (var row = 0; row < Size; row++)
         {
             for (var col = 0; col < Size; col++)
             {
-                cells[row, col] = 0;
+                FullGrid[row, col] = 0;
+                PuzzleGrid[row, col] = 0;
             }
         }
     }

@@ -44,7 +44,7 @@ public class Tests
 
             var puzzleGrid = puzzle.PuzzleGrid;
             // Actual number of blanks can be less than specified in policy
-            // as we could not find a puzzle with on single solutions with MaxBlanks
+            // as we could not find a puzzle with one single solutions with MaxBlanks
             Assert.IsTrue(validator.GetNumBlanks(puzzleGrid) <= policy.MaxBlanks);
         }
     }

@@ -24,35 +24,31 @@ public class SudokuSolver
         {
             int row = (int)Math.Floor(i / 9.0);
             int col = i % 9;
-            if (grid[row, col] == 0)
+            if (grid[row, col] != 0) continue;
+            foreach (var val in _numberList)
             {
-                foreach (var val in _numberList)
+                if (!_validator.ValidPositionForValue(val, row, col, grid)) continue;
+                grid[row, col] = val;
+                if (_validator.GridIsComplete(grid))
                 {
-                    if (_validator.ValidPositionForValue(val, row, col, grid))
+                    // detect one found solution
+                    NumSolutions++;
+                    if (NumSolutions > 1)
                     {
-                        grid[row, col] = val;
-                        if (_validator.GridIsComplete(grid))
-                        {
-                            // detect one found solution
-                            NumSolutions++;
-                            if (NumSolutions > 1)
-                            {
-                                return true;
-                            }
-                        }
-                        else
-                        {
-                            if (_SolveGrid(grid))
-                            {
-                                return true;
-                            }
-                        }
+                        return true;
                     }
                 }
-                // Could not find a valid value, back-propagate one step
-                grid[row, col] = 0;
-                break;
+                else
+                {
+                    if (_SolveGrid(grid))
+                    {
+                        return true;
+                    }
+                }
             }
+            // Could not find a valid value, back-propagate one step
+            grid[row, col] = 0;
+            break;
         }
         return false;
     }
