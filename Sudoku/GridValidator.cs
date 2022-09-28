@@ -10,9 +10,9 @@ namespace Sudoku
         public int GetNumBlanks(byte[,] grid)
         {
             int numBlanks = 0;
-            for (int row = 0; row < grid.GetLength(0); row++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int col = 0; col < grid.GetLength(1); col++)
+                for (int col = 0; col < 9; col++)
                 {
                     if (grid[row, col] == 0)
                         numBlanks++;
@@ -24,9 +24,9 @@ namespace Sudoku
 
         public bool GridIsComplete(byte[,] grid)
         {
-            for (int row = 0; row < grid.GetLength(0); row++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int col = 0; col < grid.GetLength(1); col++)
+                for (int col = 0; col < 9; col++)
                 {
                     if (grid[row, col] == 0)
                         return false;
@@ -38,9 +38,9 @@ namespace Sudoku
 
         public bool ValidRows(byte[,] grid)
         {
-            for (int row = 0; row < grid.GetLength(0); row++)
+            for (int row = 0; row < 9; row++)
             {
-                for (int col = 0; col < grid.GetLength(1); col++)
+                for (int col = 0; col < 9; col++)
                 {
                     var val = grid[row, col];
                     if (NumEqualValuesInRow(val, row, grid) != 1)
@@ -55,9 +55,9 @@ namespace Sudoku
 
         public bool ValidColumns(byte[,] grid)
         {
-            for (int col = 0; col < grid.GetLength(1); col++)
+            for (int col = 0; col < 9; col++)
             {
-                for (int row = 0; row < grid.GetLength(0); row++)
+                for (int row = 0; row < 9; row++)
                 {
                     var val = grid[row, col];
                     if (NumEqualValuesInColumn(val, col, grid) != 1)
@@ -73,7 +73,7 @@ namespace Sudoku
         private int NumEqualValuesInColumn(int val, int col, byte[,] grid)
         {
             int numEqual = 0;
-            for (int row = 0; row < grid.GetLength(0); row++)
+            for (int row = 0; row < 9; row++)
             {
                 if (grid[row, col] == val)
                 {
@@ -86,7 +86,7 @@ namespace Sudoku
         private int NumEqualValuesInRow(int val, int row, byte[,] grid)
         {
             int numEqual = 0;
-            for (int col = 0; col < grid.GetLength(1); col++)
+            for (int col = 0; col < 9; col++)
             {
                 if (grid[row, col] == val)
                 {
@@ -126,17 +126,12 @@ namespace Sudoku
 
         public bool ValidPositionForValue(int val, int row, int col, byte[,] grid)
         {
-            if (ValueInRow(val, row, grid) || ValueInCol(val, col, grid) || ValueInGroup(val, row, col, grid))
-            {
-                return false;
-            }
-
-            return true;
+            return !ValueInRow(val, row, grid) && !ValueInCol(val, col, grid) && !ValueInGroup(val, row, col, grid);
         }
 
         public bool ValueInRow(int val, int row, byte[,] grid)
         {
-            for (int col = 0; col < grid.GetLength(1); col++)
+            for (int col = 0; col < 9; col++)
             {
                 if (grid[row, col] == val)
                 {
@@ -148,7 +143,7 @@ namespace Sudoku
 
         public bool ValueInCol(int val, int col, byte[,] grid)
         {
-            for (int row = 0; row < grid.GetLength(0); row++)
+            for (int row = 0; row < 9; row++)
             {
                 if (grid[row, col] == val)
                 {

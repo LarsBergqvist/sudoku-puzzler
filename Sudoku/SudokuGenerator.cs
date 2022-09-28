@@ -98,7 +98,7 @@ public class SudokuGenerator
         puzzle.PuzzleGrid = CopyGrid(puzzleGrid);
     }
 
-    private bool FillGrid(byte[,] grid)
+    public bool FillGrid(byte[,] grid)
     {
         for (int i = 0; i < 81; i++)
         {
