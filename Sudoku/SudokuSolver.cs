@@ -14,16 +14,16 @@ public class SudokuSolver
     public int SolveGrid(byte[,] grid)
     {
         NumSolutions = 0;
-        _SolveGrid(grid);
+        _SolveGrid(0, grid);
         return NumSolutions;
     }
 
-    private bool _SolveGrid(byte[,] grid)
+    private bool _SolveGrid(int startIdx, byte[,] grid)
     {
-        for (int i = 0; i < grid.Length; i++)
+        for (var i = startIdx; i < 81; i++)
         {
-            int row = (int)Math.Floor(i / 9.0);
-            int col = i % 9;
+            var row = (int)Math.Floor(i / 9.0);
+            var col = i % 9;
             if (grid[row, col] != 0) continue;
             foreach (var val in _numberList)
             {
@@ -40,7 +40,7 @@ public class SudokuSolver
                 }
                 else
                 {
-                    if (_SolveGrid(grid))
+                    if (_SolveGrid(startIdx + 1, grid))
                     {
                         return true;
                     }

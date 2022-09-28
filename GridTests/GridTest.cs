@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Sudoku;
 
@@ -11,10 +12,9 @@ public class GridTest
     {
         var validator = new GridValidator();
         var solver = new SudokuSolver(validator);
-        var generator = new SudokuGenerator(validator, solver);
+        var generator = new SudokuGenerator(validator, solver, new NullPrinter());
         var policy = new HardPuzzlePolicy();
         var grid = new byte[9, 9];
-        generator.FillGrid(grid);
-
+        generator.FillGrid(0, grid);
     }
 }

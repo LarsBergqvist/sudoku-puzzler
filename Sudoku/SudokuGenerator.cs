@@ -1,40 +1,24 @@
 ﻿using System;
 namespace Sudoku;
 
-public interface IPuzzlePolicy
-{
-    public int MaxBlanks { get; }
-    public int MaxNumRetries { get; }
-}
-
-public class BasicPuzzlePolicy : IPuzzlePolicy
-{
-    public int MaxBlanks => 30;
-    public int MaxNumRetries => 10;
-}
-
-public class HardPuzzlePolicy : IPuzzlePolicy
-{
-    public int MaxBlanks => 55;
-    public int MaxNumRetries => 10;
-}
-
 public class SudokuGenerator
 {
     private readonly GridValidator _validator;
     private readonly SudokuSolver _solver;
-    private readonly SudokuPuzzle _sudokuPuzzle = new SudokuPuzzle();
+    private readonly SudokuPuzzle _sudokuPuzzle = new();
+    private readonly IPrinter _printer;
 
-    public SudokuGenerator(GridValidator validator, SudokuSolver solver)
+    public SudokuGenerator(GridValidator validator, SudokuSolver solver, IPrinter printer)
     {
         _validator = validator;
         _solver = solver;
+        _printer = printer;
     }
 
     public SudokuPuzzle GeneratePuzzle(IPuzzlePolicy policy)
     {
         _sudokuPuzzle.Clear();
-        FillGrid(_sudokuPuzzle.FullGrid);
+        FillGrid(0, _sudokuPuzzle.FullGrid);
         _sudokuPuzzle.PuzzleGrid = CopyGrid(_sudokuPuzzle.FullGrid);
         CreatePuzzleGrid(_sudokuPuzzle, policy.MaxBlanks, policy.MaxNumRetries);
         return _sudokuPuzzle;
@@ -49,6 +33,7 @@ public class SudokuGenerator
         // Start with number of blanks as specified in policy
         // If multiple solutions are found, decrease the number of blank
         // cells until a single solution is found
+        //
         while (!found && numBlanks > 0)
         {
             int numRetries = maxNumRetries;
@@ -74,17 +59,10 @@ public class SudokuGenerator
                 }
                 
                 puzzle.NumSolutions = _solver.SolveGrid(puzzleGrid);
-                if (puzzle.NumSolutions > 1)
-                {
-                    Console.WriteLine($"Too many solutions: {puzzle.NumSolutions}");
-                }
-                else if (puzzle.NumSolutions == 0)
-                {
-                    Console.WriteLine("No solution found");
-                }
 
                 if (puzzle.NumSolutions != 1)
                 {
+                    _printer.Write($"*");
                     puzzleGrid = backupGrid;
                 }
                 else
@@ -98,9 +76,9 @@ public class SudokuGenerator
         puzzle.PuzzleGrid = CopyGrid(puzzleGrid);
     }
 
-    public bool FillGrid(byte[,] grid)
+    public bool FillGrid(int startIdx, byte[,] grid)
     {
-        for (int i = 0; i < 81; i++)
+        for (int i = startIdx; i < 81; i++)
         {
             int row = (int)Math.Floor(i / 9.0);
             int col = i % 9;
@@ -115,7 +93,7 @@ public class SudokuGenerator
                     return true;
                 }
 
-                if (FillGrid(grid))
+                if (FillGrid(i + 1, grid))
                 {
                     return true;
                 }
@@ -133,10 +111,10 @@ public class SudokuGenerator
         byte[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var rng = new Random(Guid.NewGuid().GetHashCode());
-        int n = numberList.Length;
+        var n = numberList.Length;
         while (n > 1)
         {
-            int k = rng.Next(n--);
+            var k = rng.Next(n--);
             (numberList[n], numberList[k]) = (numberList[k], numberList[n]);
         }
         return numberList;
