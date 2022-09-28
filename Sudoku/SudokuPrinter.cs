@@ -1,35 +1,35 @@
-using System;
 namespace Sudoku;
 
 public class SudokuPrinter
 {
     private readonly SudokuPuzzle _puzzle;
-    public SudokuPrinter(SudokuPuzzle puzzle)
+    private readonly IPrinter _printer;
+    public SudokuPrinter(SudokuPuzzle puzzle, IPrinter printer)
     {
         _puzzle = puzzle;
-
+        _printer = printer;
     }
     
     public void Print()
     {
-        Console.WriteLine($"Number of solutions: {_puzzle.NumSolutions}");
+        _printer.WriteLine($"Number of solutions: {_puzzle.NumSolutions}");
         PrintFullGrid();
         PrintPuzzleGrid();
     }
 
     private void PrintFullGrid()
     {
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine("Full grid:");
+        _printer.WriteLine();
+        _printer.WriteLine();
+        _printer.WriteLine("Full grid:");
         PrintGrid(_puzzle.FullGrid);
     }
 
     private void PrintPuzzleGrid()
     {
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine("Puzzle grid:");
+        _printer.WriteLine();
+        _printer.WriteLine();
+        _printer.WriteLine("Puzzle grid:");
         PrintGrid(_puzzle.PuzzleGrid);
     }
     
@@ -39,31 +39,31 @@ public class SudokuPrinter
         {
             if ((row) % 3 == 0)
             {
-                Console.WriteLine("-------------------");
+                _printer.WriteLine("-------------------");
             }
-            Console.Write("|");
+            _printer.Write("|");
             for (int col = 0; col < cells.GetLength(1); col++)
             {
                 if (cells[row, col] == 0)
                 {
-                    Console.Write(" ");
+                    _printer.Write(" ");
                 }
                 else
                 {
-                    Console.Write($"{cells[row, col]}");
+                    _printer.Write($"{cells[row, col]}");
                 }
                 if ((col + 1) % 3 == 0)
                 {
-                    Console.Write("|");
+                    _printer.Write("|");
                 }
                 else
                 {
-                    Console.Write(" ");
+                    _printer.Write(" ");
                 }
             }
-            Console.WriteLine();
+            _printer.WriteLine();
         }
-        Console.WriteLine("-------------------");
+        _printer.WriteLine("-------------------");
     }
 
 }

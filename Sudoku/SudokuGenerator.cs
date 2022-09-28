@@ -1,70 +1,54 @@
 ﻿using System;
 namespace Sudoku;
 
-public interface IPuzzlePolicy
-{
-    public int MaxBlanks { get; }
-}
-
-public class BasicPuzzlePolicy : IPuzzlePolicy
-{
-    public int MaxBlanks => 30;
-}
-
-public class HardPuzzlePolicy : IPuzzlePolicy
-{
-    public int MaxBlanks => 50;
-}
-
 public class SudokuGenerator
 {
-    private readonly byte[] _numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
     private readonly GridValidator _validator;
     private readonly SudokuSolver _solver;
-    private readonly SudokuPuzzle _sudokuPuzzle = new SudokuPuzzle();
+    private readonly SudokuPuzzle _sudokuPuzzle = new();
+    private readonly IPrinter _printer;
 
-    public SudokuGenerator(GridValidator validator, SudokuSolver solver)
+    public SudokuGenerator(GridValidator validator, SudokuSolver solver, IPrinter printer)
     {
         _validator = validator;
         _solver = solver;
+        _printer = printer;
     }
 
     public SudokuPuzzle GeneratePuzzle(IPuzzlePolicy policy)
     {
         _sudokuPuzzle.Clear();
-        FillGrid(_sudokuPuzzle.FullGrid);
+        FillGrid(0, _sudokuPuzzle.FullGrid);
         _sudokuPuzzle.PuzzleGrid = CopyGrid(_sudokuPuzzle.FullGrid);
-        CreatePuzzleGrid(_sudokuPuzzle, policy.MaxBlanks);
+        CreatePuzzleGrid(_sudokuPuzzle, policy.MaxBlanks, policy.MaxNumRetries);
         return _sudokuPuzzle;
     }
 
-    private void CreatePuzzleGrid(SudokuPuzzle puzzle, int maxBlanks)
+    private void CreatePuzzleGrid(SudokuPuzzle puzzle, int maxBlanks, int maxNumRetries)
     {
         var puzzleGrid = CopyGrid(puzzle.PuzzleGrid);
-        int numBlanks = maxBlanks;
-        bool found = false;
+        var numBlanks = maxBlanks;
+        var found = false;
         //
         // Start with number of blanks as specified in policy
         // If multiple solutions are found, decrease the number of blank
         // cells until a single solution is found
-        int maxTries = 1000;
-        while (!found && numBlanks > 0 && maxTries > 0)
+        //
+        while (!found && numBlanks > 0)
         {
-            maxTries--;
-            int numRetries = 100;
-            int retries = 0;
+            var numRetries = maxNumRetries;
+            var retries = 0;
             while (retries < numRetries && !found)
             {
                 var rng = new Random(Guid.NewGuid().GetHashCode());
                 var backupGrid = CopyGrid(puzzleGrid);
 
-                int numRemainingBlanks = numBlanks;
+                var numRemainingBlanks = numBlanks;
 
                 while (numRemainingBlanks > 0)
                 {
-                    int row = rng.Next(9);
-                    int col = rng.Next(9);
+                    var row = rng.Next(9);
+                    var col = rng.Next(9);
                     while (puzzleGrid[row, col] == 0)
                     {
                         row = rng.Next(9);
@@ -73,21 +57,12 @@ public class SudokuGenerator
                     puzzleGrid[row, col] = 0;
                     numRemainingBlanks--;
                 }
-
-                var copy = CopyGrid(puzzleGrid);
-
-                puzzle.NumSolutions = _solver.SolveGrid(copy);
-                if (puzzle.NumSolutions > 1)
-                {
-                    Console.WriteLine($"Too many solutions: {puzzle.NumSolutions}");
-                }
-                else if (puzzle.NumSolutions == 0)
-                {
-                    Console.WriteLine("No solution found");
-                }
+                
+                puzzle.NumSolutions = _solver.SolveGrid(puzzleGrid);
 
                 if (puzzle.NumSolutions != 1)
                 {
+                    _printer.Write($"*");
                     puzzleGrid = backupGrid;
                 }
                 else
@@ -101,66 +76,48 @@ public class SudokuGenerator
         puzzle.PuzzleGrid = CopyGrid(puzzleGrid);
     }
 
-    private bool FillGrid(byte[,] grid)
+    private bool FillGrid(int startIdx, byte[,] grid)
     {
-        for (int i = 0; i < grid.Length; i++)
+        for (var i = startIdx; i < 81; i++)
         {
-            int row = (int)Math.Floor(i / 9.0);
-            int col = i % 9;
-            if (grid[row, col] == 0)
+            var row = (int)Math.Floor(i / 9.0);
+            var col = i % 9;
+            if (grid[row, col] != 0) continue;
+            var numList = GetRandomNumberList();
+            foreach (var val in numList)
             {
-                var numList = GetRandomNumberList();
-                foreach (var val in numList)
-                {
-                    if (_validator.ValidPositionForValue(val, row, col, grid))
-                    {
-                        grid[row, col] = val;
-                        if (_validator.GridIsComplete(grid))
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            if (FillGrid(grid))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-                // could not find a valid number
-                // back-propagate, return and make a new try with the previous cell
-                grid[row, col] = 0;
-                return false;
+                if (!_validator.ValidPositionForValue(val, row, col, grid)) continue;
+                grid[row, col] = val;
+                if (_validator.GridIsComplete(grid))
+                    return true;
+
+                if (FillGrid(i + 1, grid))
+                    return true;
             }
+            // could not find a valid number
+            // back-propagate, return and make a new try with the previous cell
+            grid[row, col] = 0;
+            return false;
         }
         return false;
     }
 
-    private byte[] GetRandomNumberList()
+    private static byte[] GetRandomNumberList()
     {
+        byte[] numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
         var rng = new Random(Guid.NewGuid().GetHashCode());
-        int n = _numberList.Length;
+        var n = numberList.Length;
         while (n > 1)
         {
-            int k = rng.Next(n--);
-            (_numberList[n], _numberList[k]) = (_numberList[k], _numberList[n]);
+            var k = rng.Next(n--);
+            (numberList[n], numberList[k]) = (numberList[k], numberList[n]);
         }
-        return _numberList;
+        return numberList;
     }
 
-    private byte[,] CopyGrid(byte[,] original)
+    private static byte[,] CopyGrid(byte[,] original)
     {
-        var copy = new byte[original.GetLength(0), original.GetLength(1)];
-        for (var row = 0; row < original.GetLength(0); row++)
-        {
-            for (var col = 0; col < original.GetLength(1); col++)
-            {
-                copy[row, col] = original[row, col];
-            }
-        }
-
-        return copy;
+        return (byte[,])original.Clone();
     }
-
 }
