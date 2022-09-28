@@ -34,16 +34,12 @@ public class SudokuSolver
                     // detect one found solution
                     NumSolutions++;
                     if (NumSolutions > 1)
-                    {
                         return true;
-                    }
                 }
                 else
                 {
                     if (_SolveGrid(startIdx + 1, grid))
-                    {
                         return true;
-                    }
                 }
             }
             // Could not find a valid value, back-propagate one step
