@@ -41,11 +41,11 @@ public class SudokuGenerator
                 var backupGrid = CopyGrid(puzzleGrid);
                 var cellsToBlank = GetRandomCellIndices(currentBlanks);
 
-                foreach (var (row, col) in cellsToBlank)
+                foreach (var idx in cellsToBlank)
                 {
-                    puzzleGrid[row, col] = 0;
+                    puzzleGrid[idx] = 0;
                 }
-                
+
                 puzzle.NumSolutions = _solver.SolveGrid(puzzleGrid);
 
                 if (puzzle.NumSolutions != 1)
@@ -63,12 +63,9 @@ public class SudokuGenerator
         puzzle.PuzzleGrid = CopyGrid(puzzleGrid);
     }
 
-    private List<(int row, int col)> GetRandomCellIndices(int count)
+    private List<int> GetRandomCellIndices(int count)
     {
-        var cells = new List<(int row, int col)>();
-        for (var i = 0; i < 9; i++)
-            for (var j = 0; j < 9; j++)
-                cells.Add((i, j));
+        var cells = Enumerable.Range(0, 81).ToList();
 
         for (var i = cells.Count - 1; i > 0; i--)
         {
@@ -79,28 +76,27 @@ public class SudokuGenerator
         return cells.Take(count).ToList();
     }
 
-    private bool FillGrid(int startIdx, byte[,] grid)
+    private bool FillGrid(int startIdx, byte[] grid)
     {
         if (startIdx >= 81) return _validator.GridIsComplete(grid);
 
-        var row = startIdx / 9;
-        var col = startIdx % 9;
-
-        if (grid[row, col] != 0)
+        if (grid[startIdx] != 0)
             return FillGrid(startIdx + 1, grid);
 
         var numbers = GetRandomNumberList();
         foreach (var val in numbers)
         {
-            if (!_validator.ValidPositionForValue(val, row, col, grid)) 
+            var row = startIdx / 9;
+            var col = startIdx % 9;
+            if (!_validator.ValidPositionForValue(val, row, col, grid))
                 continue;
 
-            grid[row, col] = val;
+            grid[startIdx] = val;
             if (FillGrid(startIdx + 1, grid))
                 return true;
         }
 
-        grid[row, col] = 0;
+        grid[startIdx] = 0;
         return false;
     }
 
@@ -116,8 +112,8 @@ public class SudokuGenerator
         return numberList;
     }
 
-    private static byte[,] CopyGrid(byte[,] original)
+    private static byte[] CopyGrid(byte[] original)
     {
-        return (byte[,])original.Clone();
+        return (byte[])original.Clone();
     }
 }
