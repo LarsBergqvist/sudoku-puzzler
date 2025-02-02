@@ -36,7 +36,7 @@ internal static class Program
         while (true)
         {
             var input = Console.ReadLine();
-            if (_difficultyPolicies.TryGetValue(input!, out var policy))
+            if (input != null && _difficultyPolicies.TryGetValue(input!, out var policy))
                 return policy;
                 
             printer.WriteLine("Invalid selection. Please enter 1, 2, or 3.");
