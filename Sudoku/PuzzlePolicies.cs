@@ -21,5 +21,5 @@ public class HardPuzzlePolicy : IPuzzlePolicy
 public class VeryHardPuzzlePolicy : IPuzzlePolicy
 {
     public int MaxBlanks => 55;
-    public int MaxNumRetries => 100;
+    public int MaxNumRetries => 200;
 }

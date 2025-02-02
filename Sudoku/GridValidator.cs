@@ -1,169 +1,97 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sudoku;
-
 public class GridValidator
 {
-    private readonly HashSet<int> _numbers = new HashSet<int>();
+    private readonly HashSet<int> _numbers = new(9);
+    private const int GRID_SIZE = 9;
+    private const int GROUP_SIZE = 3;
 
-    public int GetNumBlanks(byte[,] grid)
-    {
-        int numBlanks = 0;
-        for (int row = 0; row < 9; row++)
-        {
-            for (int col = 0; col < 9; col++)
-            {
-                if (grid[row, col] == 0)
-                    numBlanks++;
-            }
-        }
-        return numBlanks;
-    }
+    public int GetNumBlanks(byte[,] grid) => 
+        Enumerable.Range(0, GRID_SIZE)
+            .SelectMany(row => Enumerable.Range(0, GRID_SIZE)
+                .Select(col => grid[row, col]))
+            .Count(val => val == 0);
 
-    public bool GridIsComplete(byte[,] grid)
-    {
-        for (int row = 0; row < 9; row++)
-        {
-            for (int col = 0; col < 9; col++)
-            {
-                if (grid[row, col] == 0)
-                    return false;
-            }
-        }
-        return true;
-    }
+    public bool GridIsComplete(byte[,] grid) =>
+        Enumerable.Range(0, GRID_SIZE)
+            .SelectMany(row => Enumerable.Range(0, GRID_SIZE)
+                .Select(col => grid[row, col]))
+            .All(val => val != 0);
 
-    public bool ValidRows(byte[,] grid)
-    {
-        for (int row = 0; row < 9; row++)
-        {
-            for (int col = 0; col < 9; col++)
-            {
-                var val = grid[row, col];
-                if (NumEqualValuesInRow(val, row, grid) != 1)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    public bool ValidRows(byte[,] grid) =>
+        Enumerable.Range(0, GRID_SIZE)
+            .All(row => IsValidSet(GetRow(grid, row)));
 
-    public bool ValidColumns(byte[,] grid)
-    {
-        for (int col = 0; col < 9; col++)
-        {
-            for (int row = 0; row < 9; row++)
-            {
-                var val = grid[row, col];
-                if (NumEqualValuesInColumn(val, col, grid) != 1)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private int NumEqualValuesInColumn(int val, int col, byte[,] grid)
-    {
-        int numEqual = 0;
-        for (int row = 0; row < 9; row++)
-        {
-            if (grid[row, col] == val)
-            {
-                numEqual++;
-            }
-        }
-        return numEqual;
-    }
-
-    private int NumEqualValuesInRow(int val, int row, byte[,] grid)
-    {
-        int numEqual = 0;
-        for (int col = 0; col < 9; col++)
-        {
-            if (grid[row, col] == val)
-            {
-                numEqual++;
-            }
-        }
-        return numEqual;
-    }
+    public bool ValidColumns(byte[,] grid) =>
+        Enumerable.Range(0, GRID_SIZE)
+            .All(col => IsValidSet(GetColumn(grid, col)));
 
     public bool ValidGroups(byte[,] grid)
     {
-        for(int rowGroup=0; rowGroup < 3; rowGroup++)
+        for (int rowGroup = 0; rowGroup < GROUP_SIZE; rowGroup++)
         {
-            for(int colGroup=0; colGroup < 3; colGroup++)
+            for (int colGroup = 0; colGroup < GROUP_SIZE; colGroup++)
             {
-                _numbers.Clear();
-                for (int row=rowGroup*3; row < rowGroup*3+3; row++)
-                {
-                    for(int col=colGroup*3; col < colGroup*3+3; col++)
-                    {
-                        var val = grid[row, col];
-                        if (_numbers.Contains(val))
-                        {
-                            return false;
-                        }
-                        _numbers.Add(val);
-                    }
-                }
-                if (_numbers.Count != 9)
-                {
+                if (!IsValidGroup(grid, rowGroup, colGroup))
                     return false;
-                }
             }
         }
         return true;
     }
 
-    public bool ValidPositionForValue(int val, int row, int col, byte[,] grid)
-    {
-        return !ValueInRow(val, row, grid) && !ValueInCol(val, col, grid) && !ValueInGroup(val, row, col, grid);
-    }
+    public bool ValidPositionForValue(int val, int row, int col, byte[,] grid) =>
+        !ValueInRow(val, row, grid) && 
+        !ValueInCol(val, col, grid) && 
+        !ValueInGroup(val, row, col, grid);
 
-    private bool ValueInRow(int val, int row, byte[,] grid)
+    private bool IsValidGroup(byte[,] grid, int rowGroup, int colGroup)
     {
-        for (int col = 0; col < 9; col++)
+        _numbers.Clear();
+        int rowStart = rowGroup * GROUP_SIZE;
+        int colStart = colGroup * GROUP_SIZE;
+
+        for (int row = rowStart; row < rowStart + GROUP_SIZE; row++)
         {
-            if (grid[row, col] == val)
+            for (int col = colStart; col < colStart + GROUP_SIZE; col++)
             {
-                return true;
+                var val = grid[row, col];
+                if (val != 0 && !_numbers.Add(val))
+                    return false;
             }
         }
-        return false;
+        return true;
     }
 
-    private bool ValueInCol(int val, int col, byte[,] grid)
+    private static bool IsValidSet(IEnumerable<byte> values)
     {
-        for (int row = 0; row < 9; row++)
-        {
-            if (grid[row, col] == val)
-            {
-                return true;
-            }
-        }
-        return false;
+        var nonZeroValues = values.Where(v => v != 0);
+        var zeroValues = nonZeroValues as byte[] ?? nonZeroValues.ToArray();
+        return zeroValues.Count() == zeroValues.Distinct().Count();
     }
+
+    private static IEnumerable<byte> GetRow(byte[,] grid, int row) =>
+        Enumerable.Range(0, GRID_SIZE).Select(col => grid[row, col]);
+
+    private static IEnumerable<byte> GetColumn(byte[,] grid, int col) =>
+        Enumerable.Range(0, GRID_SIZE).Select(row => grid[row, col]);
+
+    private bool ValueInRow(int val, int row, byte[,] grid) =>
+        Enumerable.Range(0, GRID_SIZE).Any(col => grid[row, col] == val);
+
+    private bool ValueInCol(int val, int col, byte[,] grid) =>
+        Enumerable.Range(0, GRID_SIZE).Any(row => grid[row, col] == val);
 
     private bool ValueInGroup(int val, int row, int col, byte[,] grid)
     {
-        // Check if value exists in its 3x3 group
-        var groupRowStart = (int)(Math.Floor(row / 3.0) * 3);
-        var groupColStart = (int)(Math.Floor(col / 3.0) * 3);
-        for (int r = groupRowStart; r < groupRowStart + 3; r++)
-        {
-            for (int c = groupColStart; c < groupColStart + 3; c++)
-            {
-                if (grid[r, c] == val)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        int groupRowStart = (row / GROUP_SIZE) * GROUP_SIZE;
+        int groupColStart = (col / GROUP_SIZE) * GROUP_SIZE;
+
+        return Enumerable.Range(groupRowStart, GROUP_SIZE)
+            .SelectMany(r => Enumerable.Range(groupColStart, GROUP_SIZE)
+                .Select(c => grid[r, c]))
+            .Any(v => v == val);
     }
 }

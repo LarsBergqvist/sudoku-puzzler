@@ -3,9 +3,10 @@ namespace Sudoku;
 
 public class SudokuSolver
 {
-    private readonly byte[] _numberList = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    private static ReadOnlySpan<byte> Numbers => new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     private int NumSolutions { get; set; }
     private readonly GridValidator _validator;
+
     public SudokuSolver(GridValidator validator)
     {
         _validator = validator;
@@ -22,29 +23,43 @@ public class SudokuSolver
     {
         for (var i = startIdx; i < 81; i++)
         {
-            var row = (int)Math.Floor(i / 9.0);
+            var row = i / 9;  // Integer division automatically floors
             var col = i % 9;
+            
             if (grid[row, col] != 0) continue;
-            foreach (var val in _numberList)
+
+            foreach (var val in Numbers)
             {
                 if (!_validator.ValidPositionForValue(val, row, col, grid)) continue;
+                
                 grid[row, col] = val;
-                if (_validator.GridIsComplete(grid))
+                
+                // Check if this was the last empty cell
+                if (i == 80 || !HasEmptyCells(grid, i + 1))
                 {
-                    // detect one found solution
                     NumSolutions++;
                     if (NumSolutions > 1)
                         return true;
                 }
                 else
                 {
-                    if (_SolveGrid(startIdx + 1, grid))
+                    if (_SolveGrid(i + 1, grid))  // Fixed: Use i+1 instead of startIdx+1
                         return true;
                 }
             }
-            // Could not find a valid value, back-propagate one step
+            
             grid[row, col] = 0;
-            break;
+            return false;  // No valid solution found for this cell
+        }
+        return false;
+    }
+
+    private static bool HasEmptyCells(byte[,] grid, int startIdx)
+    {
+        for (var i = startIdx; i < 81; i++)
+        {
+            if (grid[i / 9, i % 9] == 0)
+                return true;
         }
         return false;
     }
