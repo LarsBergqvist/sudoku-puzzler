@@ -1,4 +1,4 @@
-namespace Sudoku;
+namespace Sudoku.Library;
 
 public interface IPuzzlePolicy
 {

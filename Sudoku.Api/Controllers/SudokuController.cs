@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Sudoku;
 using Sudoku.Api.Models;
+using Sudoku.Library;
 
 namespace Sudoku.Api.Controllers;
 

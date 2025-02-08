@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Sudoku;
+using Sudoku.Library;
 
 namespace GridTests;
 

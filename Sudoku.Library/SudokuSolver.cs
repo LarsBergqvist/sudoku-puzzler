@@ -1,5 +1,4 @@
-﻿using System;
-namespace Sudoku;
+﻿namespace Sudoku.Library;
 
 public class SudokuSolver
 {

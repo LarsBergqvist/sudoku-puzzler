@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
-using Sudoku;
+using Sudoku.Api;
 using Sudoku.Api.Swagger;
+using Sudoku.Library;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,19 +11,19 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo 
     { 
-        Title = "Sudoku API", 
+        Title = "Sudoku.Console API", 
         Version = "v1",
-        Description = "API for generating Sudoku puzzles"
+        Description = "API for generating Sudoku.Console puzzles"
     });
     
     // Configure enum naming
     c.SchemaFilter<EnumSchemaFilter>();
 });
 
-// Register Sudoku services
+// Register Sudoku.Console services
 builder.Services.AddSingleton<GridValidator>();
 builder.Services.AddSingleton<SudokuSolver>();
-builder.Services.AddSingleton<ICustomLogger, ConsoleCustomLogger>();
+builder.Services.AddSingleton<ICustomLogger, Logger>();
 builder.Services.AddSingleton<SudokuGenerator>();
 
 var app = builder.Build();
@@ -30,7 +31,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sudoku API V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sudoku.Console API V1");
     c.RoutePrefix = "swagger";
 });
 
