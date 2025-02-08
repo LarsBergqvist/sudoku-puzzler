@@ -1,6 +1,6 @@
 namespace Sudoku.Api;
 
-public class ConsolePrinter : IPrinter
+public class ConsoleCustomLogger : ICustomLogger
 {
     public void Write(string message)
     {

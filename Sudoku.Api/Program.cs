@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(c =>
 // Register Sudoku services
 builder.Services.AddSingleton<GridValidator>();
 builder.Services.AddSingleton<SudokuSolver>();
-builder.Services.AddSingleton<IPrinter, ConsolePrinter>();
+builder.Services.AddSingleton<ICustomLogger, ConsoleCustomLogger>();
 builder.Services.AddSingleton<SudokuGenerator>();
 
 var app = builder.Build();
