@@ -8,7 +8,7 @@ public interface IPuzzlePolicy
 
 public class BasicPuzzlePolicy : IPuzzlePolicy
 {
-    public int MaxBlanks => 30;
+    public int MaxBlanks => 45;
     public int MaxNumRetries => 10;
 }
 

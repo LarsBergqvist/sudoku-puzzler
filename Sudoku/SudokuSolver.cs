@@ -12,29 +12,27 @@ public class SudokuSolver
         _validator = validator;
     }
 
-    public int SolveGrid(byte[,] grid)
+    public int SolveGrid(byte[] grid)
     {
         NumSolutions = 0;
         _SolveGrid(0, grid);
         return NumSolutions;
     }
 
-    private bool _SolveGrid(int startIdx, byte[,] grid)
+    private bool _SolveGrid(int startIdx, byte[] grid)
     {
         for (var i = startIdx; i < 81; i++)
         {
-            var row = i / 9;  // Integer division automatically floors
-            var col = i % 9;
-            
-            if (grid[row, col] != 0) continue;
+            if (grid[i] != 0) continue;
 
             foreach (var val in Numbers)
             {
+                var row = i / 9;
+                var col = i % 9;
                 if (!_validator.ValidPositionForValue(val, row, col, grid)) continue;
-                
-                grid[row, col] = val;
-                
-                // Check if this was the last empty cell
+
+                grid[i] = val;
+
                 if (i == 80 || !HasEmptyCells(grid, i + 1))
                 {
                     NumSolutions++;
@@ -43,22 +41,22 @@ public class SudokuSolver
                 }
                 else
                 {
-                    if (_SolveGrid(i + 1, grid))  // Fixed: Use i+1 instead of startIdx+1
+                    if (_SolveGrid(i + 1, grid))
                         return true;
                 }
             }
-            
-            grid[row, col] = 0;
-            return false;  // No valid solution found for this cell
+
+            grid[i] = 0;
+            return false;
         }
         return false;
     }
 
-    private static bool HasEmptyCells(byte[,] grid, int startIdx)
+    private static bool HasEmptyCells(byte[] grid, int startIdx)
     {
         for (var i = startIdx; i < 81; i++)
         {
-            if (grid[i / 9, i % 9] == 0)
+            if (grid[i] == 0)
                 return true;
         }
         return false;

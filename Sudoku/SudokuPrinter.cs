@@ -9,7 +9,7 @@ public class SudokuPrinter
         _puzzle = puzzle;
         _printer = printer;
     }
-    
+
     public void Print()
     {
         _printer.WriteLine($"Number of solutions: {_puzzle.NumSolutions}");
@@ -32,25 +32,26 @@ public class SudokuPrinter
         _printer.WriteLine("Puzzle grid:");
         PrintGrid(_puzzle.PuzzleGrid);
     }
-    
-    private void PrintGrid(byte[,] cells)
+
+    private void PrintGrid(byte[] cells)
     {
-        for (int row = 0; row < cells.GetLength(0); row++)
+        for (int row = 0; row < 9; row++)
         {
-            if ((row) % 3 == 0)
+            if (row % 3 == 0)
             {
                 _printer.WriteLine("-------------------");
             }
             _printer.Write("|");
-            for (int col = 0; col < cells.GetLength(1); col++)
+            for (int col = 0; col < 9; col++)
             {
-                if (cells[row, col] == 0)
+                var value = cells[row * 9 + col];
+                if (value == 0)
                 {
                     _printer.Write(" ");
                 }
                 else
                 {
-                    _printer.Write($"{cells[row, col]}");
+                    _printer.Write($"{value}");
                 }
                 if ((col + 1) % 3 == 0)
                 {
@@ -65,5 +66,4 @@ public class SudokuPrinter
         }
         _printer.WriteLine("-------------------");
     }
-
 }
