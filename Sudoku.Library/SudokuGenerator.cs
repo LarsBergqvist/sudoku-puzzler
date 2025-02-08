@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace Sudoku;
+﻿namespace Sudoku.Library;
 
 public class SudokuGenerator
 {
     private readonly GridValidator _validator;
     private readonly SudokuSolver _solver;
     private readonly SudokuPuzzle _sudokuPuzzle = new();
-    private readonly IPrinter _printer;
+    private readonly ICustomLogger _customLogger;
     private readonly Random _random;
 
-    public SudokuGenerator(GridValidator validator, SudokuSolver solver, IPrinter printer)
+    public SudokuGenerator(GridValidator validator, SudokuSolver solver, ICustomLogger customLogger)
     {
         _validator = validator;
         _solver = solver;
-        _printer = printer;
+        _customLogger = customLogger;
         _random = new Random();
     }
 
@@ -50,7 +47,7 @@ public class SudokuGenerator
 
                 if (puzzle.NumSolutions != 1)
                 {
-                    _printer.Write("*");
+                    _customLogger.Write("*");
                     puzzleGrid = backupGrid;
                 }
                 else

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sudoku.Library;
 
 namespace Sudoku;
 
@@ -14,7 +15,7 @@ internal static class Program
 
     private static void Main()
     {
-        var printer = new ConsolePrinter();
+        var printer = new ConsoleCustomLogger();
         var validator = new GridValidator();
         var solver = new SudokuSolver(validator);
         var generator = new SudokuGenerator(validator, solver, printer);
@@ -26,12 +27,12 @@ internal static class Program
         printer.WriteLine($"Num blanks in puzzle: {validator.GetNumBlanks(sudokuPuzzle.PuzzleGrid)}");
     }
 
-    private static IPuzzlePolicy GetSelectedPolicy(ConsolePrinter printer)
+    private static IPuzzlePolicy GetSelectedPolicy(ConsoleCustomLogger customLogger)
     {
-        printer.WriteLine("Select difficulty level:");
-        printer.WriteLine("1. Basic");
-        printer.WriteLine("2. Hard");
-        printer.WriteLine("3. Very Hard");
+        customLogger.WriteLine("Select difficulty level:");
+        customLogger.WriteLine("1. Basic");
+        customLogger.WriteLine("2. Hard");
+        customLogger.WriteLine("3. Very Hard");
 
         while (true)
         {
@@ -39,7 +40,7 @@ internal static class Program
             if (input != null && _difficultyPolicies.TryGetValue(input!, out var policy))
                 return policy;
                 
-            printer.WriteLine("Invalid selection. Please enter 1, 2, or 3.");
+            customLogger.WriteLine("Invalid selection. Please enter 1, 2, or 3.");
         }
     }
 }

@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Sudoku;
+using Sudoku.Library;
 
 namespace GridTests;
 
@@ -35,7 +35,7 @@ public class GeneratorTests
     {
         var validator = new GridValidator();
         var solver = new SudokuSolver(validator);
-        var generator = new SudokuGenerator(validator, solver, new NullPrinter());
+        var generator = new SudokuGenerator(validator, solver, new NullCustomLogger());
         var puzzle = generator.GeneratePuzzle(policy);
         var fullGrid = puzzle.FullGrid;
 
