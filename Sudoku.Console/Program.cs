@@ -18,7 +18,7 @@ internal static class Program
         var printer = new ConsoleCustomLogger();
         var validator = new GridValidator();
         var solver = new SudokuSolver(validator);
-        var generator = new SudokuGenerator(validator, solver, printer);
+        var generator = new SudokuGenerator(validator, solver);
 
         var policy = GetSelectedPolicy(printer);
         var sudokuPuzzle = generator.GeneratePuzzle(policy);

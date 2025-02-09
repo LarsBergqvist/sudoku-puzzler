@@ -5,14 +5,12 @@ public class SudokuGenerator
     private readonly GridValidator _validator;
     private readonly SudokuSolver _solver;
     private readonly SudokuPuzzle _sudokuPuzzle = new();
-    private readonly ICustomLogger _customLogger;
     private readonly Random _random;
 
-    public SudokuGenerator(GridValidator validator, SudokuSolver solver, ICustomLogger customLogger)
+    public SudokuGenerator(GridValidator validator, SudokuSolver solver)
     {
         _validator = validator;
         _solver = solver;
-        _customLogger = customLogger;
         _random = new Random();
     }
 
@@ -47,7 +45,6 @@ public class SudokuGenerator
 
                 if (puzzle.NumSolutions != 1)
                 {
-                    _customLogger.Write("*");
                     puzzleGrid = backupGrid;
                 }
                 else

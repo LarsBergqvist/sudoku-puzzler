@@ -36,8 +36,6 @@ builder.Services.AddSwaggerGen(c =>
 // Register Sudoku services
 builder.Services.AddSingleton<GridValidator>();
 builder.Services.AddSingleton<SudokuSolver>();
-builder.Services.AddSingleton<ICustomLogger>(sp => 
-    new Logger(sp.GetRequiredService<ILogger<Logger>>()));
 builder.Services.AddSingleton<SudokuGenerator>();
 
 var app = builder.Build();
