@@ -1,0 +1,26 @@
+@page
+@model Sudoku.Web.Pages.IndexModel
+@{
+    ViewData["Title"] = "Sudoku Puzzle";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Sudoku Puzzle Generator</h1>
+    <form method="post">
+        <button type="submit" class="btn btn-primary mb-4">Generate Puzzle</button>
+    </form>
+    
+    <div id="sudokuGrid" class="sudoku-grid">
+        @for (int i = 0; i < 9; i++)
+        {
+            <div class="sudoku-row">
+                @for (int j = 0; j < 9; j++)
+                {
+                    <div class="sudoku-cell" data-row="@i" data-col="@j">
+                        @(Model.Grid != null && Model.Grid[j*9 + i] != 0 ? Model.Grid[j*9 + i].ToString() : "")
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
