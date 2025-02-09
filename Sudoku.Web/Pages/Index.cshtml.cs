@@ -35,7 +35,7 @@ public class IndexModel : PageModel
                 policy = new VeryHardPuzzlePolicy();
                 break;
             default:
-                policy = new BasicPuzzlePolicy(); // default to Basic if no difficulty specified
+                policy = new BasicPuzzlePolicy();
                 break;
         }
 
@@ -44,9 +44,8 @@ public class IndexModel : PageModel
             Grid = _generator.GeneratePuzzle(policy).PuzzleGrid;
             return Page();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            // Handle error - you might want to show an error message to the user
             return Page();
         }
     }

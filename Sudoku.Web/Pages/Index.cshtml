@@ -6,12 +6,22 @@
 
 <div class="text-center">
     <h1 class="display-4">Sudoku Puzzle Generator</h1>
-    <form method="post" asp-page-handler="Index">
+    <form method="post" action="/?handler=Post" id="puzzleForm">
         @Html.AntiForgeryToken()
+        <input type="hidden" name="difficulty" id="difficultyInput" />
         <div class="btn-group mb-4" role="group" aria-label="Difficulty selection">
-            <button type="submit" name="difficulty" value="Basic" class="btn btn-primary">Basic</button>
-            <button type="submit" name="difficulty" value="Hard" class="btn btn-warning">Hard</button>
-            <button type="submit" name="difficulty" value="VeryHard" class="btn btn-danger">Very Hard</button>
+            <button type="submit" data-difficulty="Basic" class="btn btn-primary difficulty-btn">
+                <span class="button-text">Basic</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
+            <button type="submit" data-difficulty="Hard" class="btn btn-warning difficulty-btn">
+                <span class="button-text">Hard</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
+            <button type="submit" data-difficulty="VeryHard" class="btn btn-danger difficulty-btn">
+                <span class="button-text">Very Hard</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
         </div>
     </form>
     
@@ -29,3 +39,29 @@
         }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('puzzleForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            // Get the clicked button and set the difficulty value
+            const clickedButton = e.submitter;
+            document.getElementById('difficultyInput').value = clickedButton.dataset.difficulty;
+            
+            // Disable all buttons
+            const buttons = document.querySelectorAll('.difficulty-btn');
+            buttons.forEach(button => {
+                button.disabled = true;
+                // Hide text and show spinner for the clicked button
+                if (button === clickedButton) {
+                    button.querySelector('.button-text').classList.add('d-none');
+                    button.querySelector('.spinner-border').classList.remove('d-none');
+                }
+            });
+            
+            // Submit the form
+            this.submit();
+        });
+    </script>
+}
