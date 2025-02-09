@@ -1,0 +1,67 @@
+@page
+@model Sudoku.Web.Pages.IndexModel
+@{
+    ViewData["Title"] = "Sudoku Puzzle";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Sudoku Puzzle Generator</h1>
+    <form method="post" action="/?handler=Post" id="puzzleForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="difficulty" id="difficultyInput" />
+        <div class="btn-group mb-4" role="group" aria-label="Difficulty selection">
+            <button type="submit" data-difficulty="Basic" class="btn btn-primary difficulty-btn">
+                <span class="button-text">Basic</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
+            <button type="submit" data-difficulty="Hard" class="btn btn-warning difficulty-btn">
+                <span class="button-text">Hard</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
+            <button type="submit" data-difficulty="VeryHard" class="btn btn-danger difficulty-btn">
+                <span class="button-text">Very Hard</span>
+                <span class="spinner-border spinner-border-sm d-none"></span>
+            </button>
+        </div>
+    </form>
+    
+    <div id="sudokuGrid" class="sudoku-grid">
+        @for (int i = 0; i < 9; i++)
+        {
+            <div class="sudoku-row">
+                @for (int j = 0; j < 9; j++)
+                {
+                    <div class="sudoku-cell" data-row="@i" data-col="@j">
+                        @(Model.Grid != null && Model.Grid[j*9 + i] != 0 ? Model.Grid[j*9 + i].ToString() : "")
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('puzzleForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            // Get the clicked button and set the difficulty value
+            const clickedButton = e.submitter;
+            document.getElementById('difficultyInput').value = clickedButton.dataset.difficulty;
+            
+            // Disable all buttons
+            const buttons = document.querySelectorAll('.difficulty-btn');
+            buttons.forEach(button => {
+                button.disabled = true;
+                // Hide text and show spinner for the clicked button
+                if (button === clickedButton) {
+                    button.querySelector('.button-text').classList.add('d-none');
+                    button.querySelector('.spinner-border').classList.remove('d-none');
+                }
+            });
+            
+            // Submit the form
+            this.submit();
+        });
+    </script>
+}

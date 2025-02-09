@@ -1,4 +1,4 @@
-namespace Sudoku.Api.Models;
+namespace Sudoku.Web.Models;
 
 public class SudokuResponse
 {

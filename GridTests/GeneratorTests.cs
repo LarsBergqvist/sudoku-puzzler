@@ -35,7 +35,7 @@ public class GeneratorTests
     {
         var validator = new GridValidator();
         var solver = new SudokuSolver(validator);
-        var generator = new SudokuGenerator(validator, solver, new NullCustomLogger());
+        var generator = new SudokuGenerator(validator, solver);
         var puzzle = generator.GeneratePuzzle(policy);
         var fullGrid = puzzle.FullGrid;
 
