@@ -8,7 +8,7 @@ public class IndexModel : PageModel
 {
     private readonly SudokuGenerator _generator;
 
-    public byte[] Grid { get; private set; }
+    public byte[]? Grid { get; private set; }
 
     public IndexModel(SudokuGenerator generator)
     {
