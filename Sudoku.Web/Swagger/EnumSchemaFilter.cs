@@ -1,8 +1,8 @@
+using System.Runtime.Serialization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Runtime.Serialization;
 
-namespace Sudoku.Api.Swagger;
+namespace Sudoku.Web.Swagger;
 
 public class EnumSchemaFilter : ISchemaFilter
 {

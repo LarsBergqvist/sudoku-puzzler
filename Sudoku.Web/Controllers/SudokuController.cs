@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Sudoku;
-using Sudoku.Api.Models;
 using Sudoku.Library;
+using Sudoku.Web.Models;
 
-namespace Sudoku.Api.Controllers;
+namespace Sudoku.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

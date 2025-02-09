@@ -1,6 +1,6 @@
 using Sudoku.Library;
 
-namespace Sudoku.Api;
+namespace Sudoku.Web;
 
 public class Logger : ICustomLogger
 {
