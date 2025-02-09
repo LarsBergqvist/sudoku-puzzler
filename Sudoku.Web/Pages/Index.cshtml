@@ -6,8 +6,13 @@
 
 <div class="text-center">
     <h1 class="display-4">Sudoku Puzzle Generator</h1>
-    <form method="post">
-        <button type="submit" class="btn btn-primary mb-4">Generate Puzzle</button>
+    <form method="post" asp-page-handler="Index">
+        @Html.AntiForgeryToken()
+        <div class="btn-group mb-4" role="group" aria-label="Difficulty selection">
+            <button type="submit" name="difficulty" value="Basic" class="btn btn-primary">Basic</button>
+            <button type="submit" name="difficulty" value="Hard" class="btn btn-warning">Hard</button>
+            <button type="submit" name="difficulty" value="VeryHard" class="btn btn-danger">Very Hard</button>
+        </div>
     </form>
     
     <div id="sudokuGrid" class="sudoku-grid">

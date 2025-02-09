@@ -17,23 +17,31 @@ public class IndexModel : PageModel
 
     public ActionResult OnGet()
     {
-        try
-        {
-            Grid = _generator.GeneratePuzzle(new BasicPuzzlePolicy()).PuzzleGrid;
-            return Page();
-        }
-        catch (Exception ex)
-        {
-            // Handle error - you might want to show an error message to the user
-            return Page();
-        }
+        return Page();
     }
 
-    public IActionResult OnPost()
+    public IActionResult OnPost(string difficulty)
     {
+        IPuzzlePolicy policy;
+        switch (difficulty)
+        {
+            case "Basic":
+                policy = new BasicPuzzlePolicy();
+                break;
+            case "Hard":
+                policy = new HardPuzzlePolicy();
+                break;
+            case "VeryHard":
+                policy = new VeryHardPuzzlePolicy();
+                break;
+            default:
+                policy = new BasicPuzzlePolicy(); // default to Basic if no difficulty specified
+                break;
+        }
+
         try
         {
-            Grid = _generator.GeneratePuzzle(new BasicPuzzlePolicy()).PuzzleGrid;
+            Grid = _generator.GeneratePuzzle(policy).PuzzleGrid;
             return Page();
         }
         catch (Exception ex)
