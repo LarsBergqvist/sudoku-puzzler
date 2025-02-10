@@ -37,9 +37,17 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<GridValidator>();
 builder.Services.AddSingleton<SudokuSolver>();
 builder.Services.AddSingleton<SudokuGenerator>();
-
+builder.Services.AddCors();
 var app = builder.Build();
 
+if (builder.Environment.IsDevelopment())
+{
+    app.UseCors(x => x
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .SetIsOriginAllowed(origin => true) // allow any origin
+        .AllowCredentials());
+}
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
