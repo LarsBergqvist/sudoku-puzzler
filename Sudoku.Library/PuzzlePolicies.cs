@@ -8,13 +8,13 @@ public interface IPuzzlePolicy
 
 public class BasicPuzzlePolicy : IPuzzlePolicy
 {
-    public int MaxBlanks => 45;
+    public int MaxBlanks => 35;
     public int MaxNumRetries => 10;
 }
 
 public class HardPuzzlePolicy : IPuzzlePolicy
 {
-    public int MaxBlanks => 50;
+    public int MaxBlanks => 48;
     public int MaxNumRetries => 50;
 }
 
