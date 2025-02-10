@@ -37,17 +37,22 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<GridValidator>();
 builder.Services.AddSingleton<SudokuSolver>();
 builder.Services.AddSingleton<SudokuGenerator>();
-builder.Services.AddCors();
-var app = builder.Build();
 
 if (builder.Environment.IsDevelopment())
 {
-    app.UseCors(x => x
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .SetIsOriginAllowed(origin => true) // allow any origin
-        .AllowCredentials());
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+    });
 }
+
+var app = builder.Build();
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -55,6 +60,8 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
+// Add UseCors before routing and authorization
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseStaticFiles(); // Add static files middleware
 app.UseRouting();    // Add routing middleware
