@@ -1,5 +1,9 @@
+using Microsoft.OpenApi.Models;
+using Sudoku.Web;
+using Sudoku.Web.Swagger;
 using Sudoku.Library;
-using Scalar.AspNetCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,19 @@ builder.Services.AddLogging(logging =>
 builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo 
+    { 
+        Title = "Sudoku.Web API", 
+        Version = "v1",
+        Description = "API for generating Sudoku puzzles"
+    });
+    
+    // Configure enum naming
+    c.SchemaFilter<EnumSchemaFilter>();
+});
 
 // Register Sudoku services
 builder.Services.AddSingleton<GridValidator>();
@@ -33,16 +50,15 @@ if (builder.Environment.IsDevelopment())
         });
     });
 }
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseSwagger(options =>
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    options.RouteTemplate = "/openapi/{documentName}.json";
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sudoku.Web API V1");
+    c.RoutePrefix = "swagger";
 });
-app.MapScalarApiReference();
 
 // Add UseCors before routing and authorization
 app.UseCors();
