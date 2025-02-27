@@ -23,7 +23,7 @@ public class SudokuController : ControllerBase
 
         return new SudokuResponse
         {
-            Grid = ConvertToString(puzzle.PuzzleGrid),
+            Puzzle = ConvertToString(puzzle.PuzzleGrid),
             Solution = ConvertToString(puzzle.FullGrid),
             Difficulty = difficulty
         };
