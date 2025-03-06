@@ -16,8 +16,8 @@ public class SudokuGenerator
 
     public SudokuPuzzle GeneratePuzzle(IPuzzlePolicy policy)
     {
-        _sudokuPuzzle.Clear();
-        FillGrid(0, _sudokuPuzzle.FullGrid);
+        Array.Clear(_sudokuPuzzle.FullGrid, 0, _sudokuPuzzle.FullGrid.Length);
+        FillGrid(_sudokuPuzzle.FullGrid);
         _sudokuPuzzle.PuzzleGrid = CopyGrid(_sudokuPuzzle.FullGrid);
         CreatePuzzleGrid(_sudokuPuzzle, policy.MaxBlanks, policy.MaxNumRetries);
         return _sudokuPuzzle;
@@ -57,6 +57,41 @@ public class SudokuGenerator
         puzzle.PuzzleGrid = CopyGrid(puzzleGrid);
     }
 
+    private void FillGrid(byte[] grid)
+    {
+        var stack = new Stack<(int, byte[])>();
+        stack.Push((0, (byte[])grid.Clone()));
+
+        while (stack.Count > 0)
+        {
+            var (startIdx, currentGrid) = stack.Pop();
+
+            if (startIdx >= 81)
+            {
+                Array.Copy(currentGrid, grid, 81);
+                return;
+            }
+
+            if (currentGrid[startIdx] != 0)
+            {
+                stack.Push((startIdx + 1, currentGrid));
+                continue;
+            }
+
+            var numbers = GetRandomNumberList();
+            foreach (var val in numbers)
+            {
+                var row = startIdx / 9;
+                var col = startIdx % 9;
+                if (!_validator.ValidPositionForValue(val, row, col, currentGrid))
+                    continue;
+
+                currentGrid[startIdx] = val;
+                stack.Push((startIdx + 1, (byte[])currentGrid.Clone()));
+            }
+        }
+    }
+
     private List<int> GetRandomCellIndices(int count)
     {
         var cells = Enumerable.Range(0, 81).ToList();
@@ -68,30 +103,6 @@ public class SudokuGenerator
         }
 
         return cells.Take(count).ToList();
-    }
-
-    private bool FillGrid(int startIdx, byte[] grid)
-    {
-        if (startIdx >= 81) return _validator.GridIsComplete(grid);
-
-        if (grid[startIdx] != 0)
-            return FillGrid(startIdx + 1, grid);
-
-        var numbers = GetRandomNumberList();
-        foreach (var val in numbers)
-        {
-            var row = startIdx / 9;
-            var col = startIdx % 9;
-            if (!_validator.ValidPositionForValue(val, row, col, grid))
-                continue;
-
-            grid[startIdx] = val;
-            if (FillGrid(startIdx + 1, grid))
-                return true;
-        }
-
-        grid[startIdx] = 0;
-        return false;
     }
 
     private byte[] GetRandomNumberList()
