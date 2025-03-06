@@ -12,13 +12,25 @@ public class GridValidator
     public bool GridIsComplete(byte[] grid) =>
         grid.All(val => val != 0);
 
-    public bool ValidRows(byte[] grid) =>
-        Enumerable.Range(0, GRID_SIZE)
-            .All(row => IsValidSet(GetRow(grid, row)));
+    public bool ValidRows(byte[] grid)
+    {
+        for (int row = 0; row < GRID_SIZE; row++)
+        {
+            if (!IsValidSet(GetRow(grid, row)))
+                return false;
+        }
+        return true;
+    }
 
-    public bool ValidColumns(byte[] grid) =>
-        Enumerable.Range(0, GRID_SIZE)
-            .All(col => IsValidSet(GetColumn(grid, col)));
+    public bool ValidColumns(byte[] grid)
+    {
+        for (int col = 0; col < GRID_SIZE; col++)
+        {
+            if (!IsValidSet(GetColumn(grid, col)))
+                return false;
+        }
+        return true;
+    }
 
     public bool ValidGroups(byte[] grid)
     {
@@ -56,33 +68,56 @@ public class GridValidator
         return true;
     }
 
-    private static bool IsValidSet(IEnumerable<byte> values)
+    private static bool IsValidSet(Span<byte> values)
     {
-        var nonZeroValues = values.Where(v => v != 0);
-        var zeroValues = nonZeroValues as byte[] ?? nonZeroValues.ToArray();
-        return zeroValues.Count() == zeroValues.Distinct().Count();
+        var seen = new HashSet<byte>();
+        foreach (var val in values)
+        {
+            if (val != 0 && !seen.Add(val))
+                return false;
+        }
+        return true;
     }
 
-    private static IEnumerable<byte> GetRow(byte[] grid, int row) =>
-        Enumerable.Range(0, GRID_SIZE).Select(col => grid[row * GRID_SIZE + col]);
+    private static Span<byte> GetRow(byte[] grid, int row) =>
+        new Span<byte>(grid, row * GRID_SIZE, GRID_SIZE);
 
-    private static IEnumerable<byte> GetColumn(byte[] grid, int col) =>
-        Enumerable.Range(0, GRID_SIZE).Select(row => grid[row * GRID_SIZE + col]);
+    private static Span<byte> GetColumn(byte[] grid, int col)
+    {
+        var column = new byte[GRID_SIZE];
+        for (int row = 0; row < GRID_SIZE; row++)
+        {
+            column[row] = grid[row * GRID_SIZE + col];
+        }
+        return column;
+    }
 
     private bool ValueInRow(int val, int row, byte[] grid) =>
-        Enumerable.Range(0, GRID_SIZE).Any(col => grid[row * GRID_SIZE + col] == val);
+        new Span<byte>(grid, row * GRID_SIZE, GRID_SIZE).Contains((byte)val);
 
-    private bool ValueInCol(int val, int col, byte[] grid) =>
-        Enumerable.Range(0, GRID_SIZE).Any(row => grid[row * GRID_SIZE + col] == val);
+    private bool ValueInCol(int val, int col, byte[] grid)
+    {
+        for (int row = 0; row < GRID_SIZE; row++)
+        {
+            if (grid[row * GRID_SIZE + col] == val)
+                return true;
+        }
+        return false;
+    }
 
     private bool ValueInGroup(int val, int row, int col, byte[] grid)
     {
         int groupRowStart = (row / GROUP_SIZE) * GROUP_SIZE;
         int groupColStart = (col / GROUP_SIZE) * GROUP_SIZE;
 
-        return Enumerable.Range(groupRowStart, GROUP_SIZE)
-            .SelectMany(r => Enumerable.Range(groupColStart, GROUP_SIZE)
-                .Select(c => grid[r * GRID_SIZE + c]))
-            .Any(v => v == val);
+        for (int r = groupRowStart; r < groupRowStart + GROUP_SIZE; r++)
+        {
+            for (int c = groupColStart; c < groupColStart + GROUP_SIZE; c++)
+            {
+                if (grid[r * GRID_SIZE + c] == val)
+                    return true;
+            }
+        }
+        return false;
     }
 }
