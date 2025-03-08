@@ -16,15 +16,14 @@ internal static class Program
     private static void Main()
     {
         var printer = new ConsoleCustomLogger();
-        var validator = new GridValidator();
-        var solver = new SudokuSolver(validator);
-        var generator = new SudokuGenerator(validator, solver);
+        var solver = new SudokuSolver();
+        var generator = new SudokuGenerator(solver);
 
         var policy = GetSelectedPolicy(printer);
         var sudokuPuzzle = generator.GeneratePuzzle(policy);
             
         new SudokuPrinter(sudokuPuzzle, printer).Print();
-        printer.WriteLine($"Num blanks in puzzle: {validator.GetNumBlanks(sudokuPuzzle.PuzzleGrid)}");
+        printer.WriteLine($"Num blanks in puzzle: {GridValidator.GetNumBlanks(sudokuPuzzle.PuzzleGrid)}");
     }
 
     private static IPuzzlePolicy GetSelectedPolicy(ConsoleCustomLogger customLogger)

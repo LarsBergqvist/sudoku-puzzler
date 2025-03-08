@@ -2,14 +2,8 @@
 
 public class SudokuSolver
 {
-    private static ReadOnlySpan<byte> Numbers => new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    private int NumSolutions { get; set; }
-    private readonly GridValidator _validator;
-
-    public SudokuSolver(GridValidator validator)
-    {
-        _validator = validator;
-    }
+    private static ReadOnlySpan<byte> Numbers => [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    private int NumSolutions { get; set; } = 0;
 
     public int SolveGrid(byte[] grid)
     {
@@ -28,7 +22,7 @@ public class SudokuSolver
             {
                 var row = i / 9;
                 var col = i % 9;
-                if (!_validator.ValidPositionForValue(val, row, col, grid)) continue;
+                if (!GridValidator.ValidPositionForValue(val, row, col, grid)) continue;
 
                 grid[i] = val;
 

@@ -2,14 +2,12 @@
 
 public class SudokuGenerator
 {
-    private readonly GridValidator _validator;
     private readonly SudokuSolver _solver;
     private readonly SudokuPuzzle _sudokuPuzzle = new();
     private readonly Random _random;
 
-    public SudokuGenerator(GridValidator validator, SudokuSolver solver)
+    public SudokuGenerator(SudokuSolver solver)
     {
-        _validator = validator;
         _solver = solver;
         _random = new Random();
     }
@@ -83,7 +81,7 @@ public class SudokuGenerator
             {
                 var row = startIdx / 9;
                 var col = startIdx % 9;
-                if (!_validator.ValidPositionForValue(val, row, col, currentGrid))
+                if (!GridValidator.ValidPositionForValue(val, row, col, currentGrid))
                     continue;
 
                 currentGrid[startIdx] = val;

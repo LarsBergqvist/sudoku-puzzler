@@ -1,4 +1,6 @@
-namespace Sudoku.Library;
+using Sudoku.Library;
+
+namespace Sudoku;
 
 public class SudokuPrinter
 {

@@ -34,9 +34,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Register Sudoku services
-builder.Services.AddSingleton<GridValidator>();
-builder.Services.AddSingleton<SudokuSolver>();
-builder.Services.AddSingleton<SudokuGenerator>();
+builder.Services.AddTransient<SudokuSolver>();
+builder.Services.AddTransient<SudokuGenerator>();
 
 if (builder.Environment.IsDevelopment())
 {

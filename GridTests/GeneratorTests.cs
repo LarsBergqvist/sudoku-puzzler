@@ -33,20 +33,19 @@ public class GeneratorTests
 
     private static void GridIsGeneratedCorrectly(IPuzzlePolicy policy)
     {
-        var validator = new GridValidator();
-        var solver = new SudokuSolver(validator);
-        var generator = new SudokuGenerator(validator, solver);
+        var solver = new SudokuSolver();
+        var generator = new SudokuGenerator(solver);
         var puzzle = generator.GeneratePuzzle(policy);
         var fullGrid = puzzle.FullGrid;
 
-        Assert.IsTrue(validator.GridIsComplete(fullGrid));
-        Assert.IsTrue(validator.ValidRows(fullGrid));
-        Assert.IsTrue(validator.ValidColumns(fullGrid));
-        Assert.IsTrue(validator.ValidGroups(fullGrid));
+        Assert.IsTrue(GridValidator.GridIsComplete(fullGrid));
+        Assert.IsTrue(GridValidator.ValidRows(fullGrid));
+        Assert.IsTrue(GridValidator.ValidColumns(fullGrid));
+        Assert.IsTrue(GridValidator.ValidGroups(fullGrid));
 
         var puzzleGrid = puzzle.PuzzleGrid;
         // Actual number of blanks can be less than specified in policy
         // as we could not find a puzzle with one single solutions with MaxBlanks
-        Assert.IsTrue(validator.GetNumBlanks(puzzleGrid) <= policy.MaxBlanks);
+        Assert.IsTrue(GridValidator.GetNumBlanks(puzzleGrid) <= policy.MaxBlanks);
     }
 }
