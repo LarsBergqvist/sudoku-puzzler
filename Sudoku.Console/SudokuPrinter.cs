@@ -1,35 +1,37 @@
-namespace Sudoku.Library;
+using Sudoku.Library;
+
+namespace Sudoku;
 
 public class SudokuPrinter
 {
     private readonly SudokuPuzzle _puzzle;
-    private readonly ICustomLogger _customLogger;
-    public SudokuPrinter(SudokuPuzzle puzzle, ICustomLogger customLogger)
+    private readonly IConsole _console;
+    public SudokuPrinter(SudokuPuzzle puzzle, IConsole console)
     {
         _puzzle = puzzle;
-        _customLogger = customLogger;
+        _console = console;
     }
 
     public void Print()
     {
-        _customLogger.WriteLine($"Number of solutions: {_puzzle.NumSolutions}");
+        _console.WriteLine($"Number of solutions: {_puzzle.NumSolutions}");
         PrintFullGrid();
         PrintPuzzleGrid();
     }
 
     private void PrintFullGrid()
     {
-        _customLogger.WriteLine();
-        _customLogger.WriteLine();
-        _customLogger.WriteLine("Full grid:");
+        _console.WriteLine();
+        _console.WriteLine();
+        _console.WriteLine("Full grid:");
         PrintGrid(_puzzle.FullGrid);
     }
 
     private void PrintPuzzleGrid()
     {
-        _customLogger.WriteLine();
-        _customLogger.WriteLine();
-        _customLogger.WriteLine("Puzzle grid:");
+        _console.WriteLine();
+        _console.WriteLine();
+        _console.WriteLine("Puzzle grid:");
         PrintGrid(_puzzle.PuzzleGrid);
     }
 
@@ -39,31 +41,31 @@ public class SudokuPrinter
         {
             if (row % 3 == 0)
             {
-                _customLogger.WriteLine("-------------------");
+                _console.WriteLine("-------------------");
             }
-            _customLogger.Write("|");
+            _console.Write("|");
             for (int col = 0; col < 9; col++)
             {
                 var value = cells[row * 9 + col];
                 if (value == 0)
                 {
-                    _customLogger.Write(" ");
+                    _console.Write(" ");
                 }
                 else
                 {
-                    _customLogger.Write($"{value}");
+                    _console.Write($"{value}");
                 }
                 if ((col + 1) % 3 == 0)
                 {
-                    _customLogger.Write("|");
+                    _console.Write("|");
                 }
                 else
                 {
-                    _customLogger.Write(" ");
+                    _console.Write(" ");
                 }
             }
-            _customLogger.WriteLine();
+            _console.WriteLine();
         }
-        _customLogger.WriteLine("-------------------");
+        _console.WriteLine("-------------------");
     }
 }

@@ -12,7 +12,7 @@ public class SudokuPuzzle
     public byte[] PuzzleGrid { get; set; } = new byte[Size * Size];
     public int NumSolutions { get; set; }
 
-    public void Clear()
+    private void Clear()
     {
         NumSolutions = 0;
         Array.Fill(FullGrid, (byte)0);

@@ -1,20 +1,19 @@
 ﻿namespace Sudoku.Library;
 
-public class GridValidator
+public static class GridValidator
 {
-    private readonly HashSet<int> _numbers = new(9);
-    private const int GRID_SIZE = 9;
-    private const int GROUP_SIZE = 3;
+    private const int GridSize = 9;
+    private const int GroupSize = 3;
 
-    public int GetNumBlanks(byte[] grid) =>
+    public static int GetNumBlanks(byte[] grid) =>
         grid.Count(val => val == 0);
 
-    public bool GridIsComplete(byte[] grid) =>
+    public static bool GridIsComplete(byte[] grid) =>
         grid.All(val => val != 0);
 
-    public bool ValidRows(byte[] grid)
+    public static bool ValidRows(byte[] grid)
     {
-        for (int row = 0; row < GRID_SIZE; row++)
+        for (var row = 0; row < GridSize; row++)
         {
             if (!IsValidSet(GetRow(grid, row)))
                 return false;
@@ -22,9 +21,9 @@ public class GridValidator
         return true;
     }
 
-    public bool ValidColumns(byte[] grid)
+    public static bool ValidColumns(byte[] grid)
     {
-        for (int col = 0; col < GRID_SIZE; col++)
+        for (var col = 0; col < GridSize; col++)
         {
             if (!IsValidSet(GetColumn(grid, col)))
                 return false;
@@ -32,11 +31,11 @@ public class GridValidator
         return true;
     }
 
-    public bool ValidGroups(byte[] grid)
+    public static bool ValidGroups(byte[] grid)
     {
-        for (int rowGroup = 0; rowGroup < GROUP_SIZE; rowGroup++)
+        for (var rowGroup = 0; rowGroup < GroupSize; rowGroup++)
         {
-            for (int colGroup = 0; colGroup < GROUP_SIZE; colGroup++)
+            for (var colGroup = 0; colGroup < GroupSize; colGroup++)
             {
                 if (!IsValidGroup(grid, rowGroup, colGroup))
                     return false;
@@ -45,23 +44,24 @@ public class GridValidator
         return true;
     }
 
-    public bool ValidPositionForValue(int val, int row, int col, byte[] grid) =>
+    public static bool ValidPositionForValue(int val, int row, int col, byte[] grid) =>
         !ValueInRow(val, row, grid) &&
         !ValueInCol(val, col, grid) &&
         !ValueInGroup(val, row, col, grid);
 
-    private bool IsValidGroup(byte[] grid, int rowGroup, int colGroup)
+    private static bool IsValidGroup(byte[] grid, int rowGroup, int colGroup)
     {
-        _numbers.Clear();
-        int rowStart = rowGroup * GROUP_SIZE;
-        int colStart = colGroup * GROUP_SIZE;
+        HashSet<int> numbers = new(9);
 
-        for (int row = rowStart; row < rowStart + GROUP_SIZE; row++)
+        var rowStart = rowGroup * GroupSize;
+        var colStart = colGroup * GroupSize;
+
+        for (var row = rowStart; row < rowStart + GroupSize; row++)
         {
-            for (int col = colStart; col < colStart + GROUP_SIZE; col++)
+            for (var col = colStart; col < colStart + GroupSize; col++)
             {
-                var val = grid[row * GRID_SIZE + col];
-                if (val != 0 && !_numbers.Add(val))
+                var val = grid[row * GridSize + col];
+                if (val != 0 && !numbers.Add(val))
                     return false;
             }
         }
@@ -80,41 +80,41 @@ public class GridValidator
     }
 
     private static Span<byte> GetRow(byte[] grid, int row) =>
-        new Span<byte>(grid, row * GRID_SIZE, GRID_SIZE);
+        new Span<byte>(grid, row * GridSize, GridSize);
 
     private static Span<byte> GetColumn(byte[] grid, int col)
     {
-        var column = new byte[GRID_SIZE];
-        for (int row = 0; row < GRID_SIZE; row++)
+        var column = new byte[GridSize];
+        for (var row = 0; row < GridSize; row++)
         {
-            column[row] = grid[row * GRID_SIZE + col];
+            column[row] = grid[row * GridSize + col];
         }
         return column;
     }
 
-    private bool ValueInRow(int val, int row, byte[] grid) =>
-        new Span<byte>(grid, row * GRID_SIZE, GRID_SIZE).Contains((byte)val);
+    private static bool ValueInRow(int val, int row, byte[] grid) =>
+        new Span<byte>(grid, row * GridSize, GridSize).Contains((byte)val);
 
-    private bool ValueInCol(int val, int col, byte[] grid)
+    private static bool ValueInCol(int val, int col, byte[] grid)
     {
-        for (int row = 0; row < GRID_SIZE; row++)
+        for (var row = 0; row < GridSize; row++)
         {
-            if (grid[row * GRID_SIZE + col] == val)
+            if (grid[row * GridSize + col] == val)
                 return true;
         }
         return false;
     }
 
-    private bool ValueInGroup(int val, int row, int col, byte[] grid)
+    private static bool ValueInGroup(int val, int row, int col, byte[] grid)
     {
-        int groupRowStart = (row / GROUP_SIZE) * GROUP_SIZE;
-        int groupColStart = (col / GROUP_SIZE) * GROUP_SIZE;
+        int groupRowStart = (row / GroupSize) * GroupSize;
+        int groupColStart = (col / GroupSize) * GroupSize;
 
-        for (int r = groupRowStart; r < groupRowStart + GROUP_SIZE; r++)
+        for (int r = groupRowStart; r < groupRowStart + GroupSize; r++)
         {
-            for (int c = groupColStart; c < groupColStart + GROUP_SIZE; c++)
+            for (int c = groupColStart; c < groupColStart + GroupSize; c++)
             {
-                if (grid[r * GRID_SIZE + c] == val)
+                if (grid[r * GridSize + c] == val)
                     return true;
             }
         }
