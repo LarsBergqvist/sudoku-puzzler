@@ -38,14 +38,14 @@ public class GeneratorTests
         var puzzle = generator.GeneratePuzzle(policy);
         var fullGrid = puzzle.FullGrid;
 
-        Assert.IsTrue(GridValidator.GridIsComplete(fullGrid));
-        Assert.IsTrue(GridValidator.ValidRows(fullGrid));
-        Assert.IsTrue(GridValidator.ValidColumns(fullGrid));
-        Assert.IsTrue(GridValidator.ValidGroups(fullGrid));
+        Assert.That(GridValidator.GridIsComplete(fullGrid));
+        Assert.That(GridValidator.ValidRows(fullGrid));
+        Assert.That(GridValidator.ValidColumns(fullGrid));
+        Assert.That(GridValidator.ValidGroups(fullGrid));
 
         var puzzleGrid = puzzle.PuzzleGrid;
         // Actual number of blanks can be less than specified in policy
         // as we could not find a puzzle with one single solutions with MaxBlanks
-        Assert.IsTrue(GridValidator.GetNumBlanks(puzzleGrid) <= policy.MaxBlanks);
+        Assert.That(GridValidator.GetNumBlanks(puzzleGrid) <= policy.MaxBlanks);
     }
 }

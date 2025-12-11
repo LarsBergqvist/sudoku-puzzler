@@ -1,9 +1,5 @@
-using Microsoft.OpenApi.Models;
-using Sudoku.Web;
-using Sudoku.Web.Swagger;
 using Sudoku.Library;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,9 +24,6 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API for generating Sudoku puzzles"
     });
-    
-    // Configure enum naming
-    c.SchemaFilter<EnumSchemaFilter>();
 });
 
 // Register Sudoku services
